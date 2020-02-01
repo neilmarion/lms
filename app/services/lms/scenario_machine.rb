@@ -12,8 +12,9 @@ module Lms
       loan.scenario_configs.each do |config|
         case config.name
         when "actual_plus_worst"
-          scenarios[:actual_plus_worst] = build_scenario(config.name)
+          scenarios[:actual_plus_worst] = build_scenario(config)
         when "actual_plus_best"
+          scenarios[:actual_plus_best] = build_scenario(config)
         end
       end
 
@@ -33,6 +34,17 @@ module Lms
       # ebal = ending balance
       # eprn = ending principal
       # eint = ending interest
+
+      scheduled_repayments = []
+      if config.name = "actual_plus_best"
+        scheduled_repayments = config.data["scheduled_repayments"]
+        # Remove scheduled repayments if they
+        # are supposed to be overriden by actual events
+        scheduled_repayments.delete_if do |e|
+          DateTime.parse(e["date"]) <= DateTime.parse(loan.actual_events.pluck(:date).sort.last)
+        end
+      end
+
 
       cache = {}
 
@@ -57,6 +69,7 @@ module Lms
             ebal: bbal + dint,
             eprn: bprn,
             eint: cint,
+            schd: nil,
           }
         else
           next if cache[:ebal] <= 0
@@ -103,6 +116,7 @@ module Lms
                 ebal: ebal,
                 eprn: eprn,
                 eint: eint,
+                schid: nil,
               }
             end
           else
@@ -127,7 +141,27 @@ module Lms
               ebal: ebal,
               eprn: eprn,
               eint: eint,
+              schd: nil,
             }
+          end
+        end
+
+        if scheduled_repayments.map do |r|
+          if r["date"] == day
+            cache[:tpay] = r["amount"]
+
+            if amount >= cache[:cint]
+              cache[:ided] = cache[:cint]
+              cache[:pded] = cache[:tpay] - cache[:cint]
+            else
+              cache[:ided] = cache[:tpay]
+              cache[:pded] = 0.to_f
+            end
+
+            cache[:ebal] = cache[:ebal] - r["amount"]
+            cache[:eprn] = cache[:eprn] - cache[:pded]
+            cache[:eint] = cache[:eint] - cache[:ided]
+            cache[:schd] = true
           end
         end
 
