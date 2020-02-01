@@ -12,3 +12,13 @@ gemspec
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
+#
+group :test do
+  gem 'rspec-rails'
+  gem 'database_cleaner'
+end
+
+group :development, :test do
+  gem 'pry'
+  gem 'dotenv-rails', require: 'dotenv/rails-now'
+end

@@ -9,14 +9,13 @@ Gem::Specification.new do |s|
   s.version     = Lms::VERSION
   s.authors     = ["Neil Marion dela Cruz"]
   s.email       = ["nmfdelacruz@gmail.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Lms."
-  s.description = "TODO: Description of Lms."
+  s.homepage    = "https://github.com/neilmarion/lms"
+  s.summary     = "LMS"
+  s.description = "LMS"
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency "rails", "~> 5.0.7", ">= 5.0.7.2"
-
-  s.add_development_dependency "sqlite3"
+  s.add_dependency "rails", "~> 5.0.7", ">= 5.0.7.1"
+  s.add_development_dependency "pg"
 end
