@@ -1,0 +1,36 @@
+<style>
+  table, th, td {
+    border: 1px solid black;
+  }
+</style>
+
+<table>
+  <tr>
+    <th>date</th>
+    <th>beg balance</th>
+    <th>beg principal</th>
+    <th>daily interest accrued</th>
+    <th>cumulative interest</th>
+    <th>total payment made</th>
+    <th>principal deducted</th>
+    <th>interest deducted</th>
+    <th>ending balance</th>
+    <th>ending principal</th>
+    <th>ending interest</th>
+  </tr>
+<% @scenarios[:actual_plus_worst].each do |row| %>
+  <tr>
+    <td><%= row[:date] %></td>
+    <td><%= row[:bbal].round(2) %></td>
+    <td><%= row[:bprn].round(2) %></td>
+    <td><%= row[:dint].round(2) %></td>
+    <td><%= row[:cint].round(2) %></td>
+    <td><%= row[:tpay].round(2) %></td>
+    <td><%= row[:pded].round(2) %></td>
+    <td><%= row[:ided].round(2) %></td>
+    <td><%= row[:ebal].round(2) %></td>
+    <td><%= row[:eprn].round(2) %></td>
+    <td><%= row[:eint].round(2) %></td>
+  </tr>
+<% end %>
+</table>

@@ -1,2 +1,3 @@
-Rails.application.routes.draw do
+Lms::Engine.routes.draw do
+  resources :loans
 end
