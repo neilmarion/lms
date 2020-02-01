@@ -12,7 +12,7 @@ module Lms
 
     private
 
-    def build_actual_plus_worst_scenario
+    def build_actual_plus_worst_case_scenario
       # bbal = beginning balance
       # bprn = beginning principal
       # cint = cumulative interest
@@ -22,7 +22,7 @@ module Lms
       # ebal = ending balance
       # eprn = ending principal
       # eint = ending interest
-      Event.all.map.with_index do |event, i|
+      loan.actual_events.all.map.with_index do |event, i|
       end
     end
 
