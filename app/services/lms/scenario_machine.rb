@@ -12,7 +12,7 @@ module Lms
       loan.scenario_configs.each do |config|
         case config.name
         when "actual_plus_worst"
-          scenarios[:actual_plus_worst] = build_actual_plus_worst_case_scenario
+          scenarios[:actual_plus_worst] = build_scenario(config.name)
         when "actual_plus_best"
         end
       end
@@ -22,7 +22,7 @@ module Lms
 
     private
 
-    def build_actual_plus_worst_case_scenario
+    def build_scenario(scenario_name)
       # bbal = beginning balance
       # bprn = beginning principal
       # dint = daily interest accrued
