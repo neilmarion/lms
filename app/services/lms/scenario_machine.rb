@@ -59,6 +59,7 @@ module Lms
             eint: cint,
           }
         else
+          next if cache[:ebal] <= 0
           unless events.blank?
             events.each do |event|
               bbal = cache[:ebal]
@@ -74,7 +75,7 @@ module Lms
                 eint = cint
                 ebal = bbal + dint + tadd
               when "sub_money"
-                tpay = event.data[:amount]
+                tpay = event.data["amount"]
 
                 if tpay >= cint
                   ided = cint
@@ -131,7 +132,7 @@ module Lms
         end
 
         cache
-      end
+      end.compact
     end
 
     def get_day_count(start_date, end_date)
