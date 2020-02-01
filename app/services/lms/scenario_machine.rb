@@ -23,7 +23,7 @@ module Lms
 
     private
 
-    def build_scenario(scenario_name)
+    def build_scenario(config)
       # bbal = beginning balance
       # bprn = beginning principal
       # dint = daily interest accrued
@@ -36,7 +36,8 @@ module Lms
       # eint = ending interest
 
       scheduled_repayments = []
-      if config.name = "actual_plus_best"
+
+      if config.name == "actual_plus_best"
         scheduled_repayments = config.data["scheduled_repayments"]
         # Remove scheduled repayments if they
         # are supposed to be overriden by actual events
@@ -146,7 +147,7 @@ module Lms
           end
         end
 
-        if scheduled_repayments.map do |r|
+        scheduled_repayments.map do |r|
           if r["date"] == day
             cache[:tpay] = r["amount"]
 
@@ -167,10 +168,6 @@ module Lms
 
         cache
       end.compact
-    end
-
-    def get_day_count(start_date, end_date)
-      (end_date - start_date).to_i + 1
     end
   end
 end
