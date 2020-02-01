@@ -2,7 +2,8 @@ module Lms
   class ActualScenarioMachine
     attr_accessor :scenario
 
-    def initialize
+    def initialize(loan)
+      @loan = loan
       scenario = [] # Array of Hashes
     end
 
@@ -11,9 +12,17 @@ module Lms
 
     private
 
-    def create_scenario
-      Event.all.each do |event|
-
+    def build_actual_plus_worst_scenario
+      # bbal = beginning balance
+      # bprn = beginning principal
+      # cint = cumulative interest
+      # tpay = total payment made
+      # pded = principal deducted
+      # ided = interest deducted
+      # ebal = ending balance
+      # eprn = ending principal
+      # eint = ending interest
+      Event.all.map.with_index do |event, i|
       end
     end
 
