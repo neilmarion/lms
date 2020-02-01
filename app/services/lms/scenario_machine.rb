@@ -15,6 +15,7 @@ module Lms
     def build_actual_plus_worst_case_scenario
       # bbal = beginning balance
       # bprn = beginning principal
+      # dint = daily interest accrued
       # cint = cumulative interest
       # tpay = total payment made
       # pded = principal deducted
@@ -22,7 +23,31 @@ module Lms
       # ebal = ending balance
       # eprn = ending principal
       # eint = ending interest
-      loan.actual_events.all.map.with_index do |event, i|
+
+      bbal = loan.amount
+      bprn = loan.amount
+      dint = bbal*loan.interest_per_day
+      cint = dint
+
+      cache = {
+        date: day,
+        bbal: bbal,
+        bprn: bprn,
+        dint: dint,
+        cint: cint,
+        tpay: 0,
+        pded: 0,
+        ided: 0,
+        ebal: bbal,
+        eprn: bbal,
+        eint: dint,
+      }
+
+      (loan.start_date..Date.today).map{ |date| date.strftime("%Y-%m-%d") }.map.with_index do |day, i|
+        events = loan.actual_events.where(date: day)
+        events.each do |event|
+
+        end
       end
     end
 
