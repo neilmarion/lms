@@ -1,13 +1,23 @@
 module Lms
-  class ActualScenarioMachine
-    attr_accessor :scenario
+  class ScenarioMachine
+    attr_accessor :loan
 
     def initialize(loan)
       @loan = loan
-      scenario = [] # Array of Hashes
     end
 
     def execute
+      scenarios = {}
+
+      loan.scenario_configs.each do |config|
+        case config.name
+        when "actual_plus_worst"
+          scenarios[:actual_plus_worst] = build_actual_plus_worst_case_scenario
+        when "actual_plus_best"
+        end
+      end
+
+      scenarios
     end
 
     private
@@ -44,7 +54,7 @@ module Lms
         eint: cint,
       }
 
-      (loan.start_date..Date.today).map{ |date| date.strftime("%Y-%m-%d") }.map.with_index do |day, i|
+      (loan.start_date.to_date..(loan.start_date.to_date + loan.term_count.days)).map{ |date| date.strftime("%Y-%m-%d") }.map.with_index do |day, i|
         events = loan.actual_events.where(date: day)
         unless events.blank?
           events.each do |event|
