@@ -90,7 +90,7 @@ module Lms
 
     def sum_of_changes(date)
       amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
-      amounts.inject(0){ |sum, tuple| sum += tuple[:amount] }
+      amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
     end
   end
 end
