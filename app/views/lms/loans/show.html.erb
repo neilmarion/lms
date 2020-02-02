@@ -20,6 +20,9 @@ table.paleBlueRows tr:nth-child(even) {
 table.paleBlueRows tr.summary {
   background: #1abc9c;
 }
+table.paleBlueRows tr.expected {
+  background: #f1c40f;
+}
 table.paleBlueRows thead {
   background: #0B6FA4;
   border-bottom: 5px solid #FFFFFF;
@@ -61,9 +64,10 @@ table.paleBlueRows tfoot td {
     <th>ending principal</th>
     <th>ending balance</th>
     <th>events summary</th>
+    <th>expected payment</th>
   </tr>
 <% @loan.current_scenario.each do |row| %>
-  <tr class="<%= row[:events_summary].present? ? 'summary' : 'none' %>">
+  <tr class="<%= row[:events_summary].present? ? 'summary' : 'none' %> <%= row[:expected].present? ? 'expected' : 'none' %>">
     <td><%= row[:date] %></td>
     <td><%= row[:aaa_bal].round(2) %></td>
     <td><%= row[:aaa_pri].round(2) %></td>
@@ -76,6 +80,7 @@ table.paleBlueRows tfoot td {
     <td><%= row[:zzz_pri].round(2) %></td>
     <td><%= row[:zzz_bal].round(2) %></td>
     <td><%= row[:events_summary] %></td>
+    <td><%= row[:expected].try(:[], :expected_tot_payment)&.round(2) %></td>
   </tr>
 <% end %>
 </table>

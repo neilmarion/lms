@@ -27,8 +27,9 @@ module Lms
       # zzz_pri = ending principal
       # zzz_bal = ending balance
 
+      start_date = loan.start_date.strftime(DailyInterestMapper::DATE_ID_FORMAT)
       first = temp = {
-        date: loan.start_date.strftime(DailyInterestMapper::DATE_ID_FORMAT),
+        date: start_date,
         aaa_bal: 0,
         aaa_pri: 0,
         day_int: 0,
@@ -40,7 +41,10 @@ module Lms
         zzz_pri: loan.amount,
         zzz_bal: loan.amount,
         events_summary: nil,
+        expected: nil,
       }
+
+      expected_payment(start_date)
 
       loan.daily_interest_map.map do |date, int|
         aaa_bal = temp[:zzz_bal]
@@ -84,6 +88,7 @@ module Lms
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,
           events_summary: events_summary(date),
+          expected: expected_payment(date),
         }
 
         temp
@@ -104,6 +109,14 @@ module Lms
           "Paid #{-1*e["amount"]}"
         end
       end.join("; ")
+    end
+
+    def expected_payment(date)
+      if expected_payment = loan.expected_payments[date]
+        {
+          expected_tot_payment: expected_payment,
+        }
+      end
     end
   end
 end
