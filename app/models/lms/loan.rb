@@ -2,6 +2,8 @@ module Lms
   class Loan < ApplicationRecord
     has_many :actual_events
 
+    after_create :calculate_expected_payment_dates
+
     def daily_interest_map
       @daily_interest_map ||= DailyInterestMapper.new(self).execute
     end
@@ -20,6 +22,11 @@ module Lms
         interest: interest,
         period_count: period_count
       })
+    end
+
+    def calculate_expected_payment_dates
+      expected_payment_dates = CalculateLoanExpectedPaymentDates.new(self).execute
+      update_attributes(expected_payment_dates: expected_payment_dates)
     end
   end
 end

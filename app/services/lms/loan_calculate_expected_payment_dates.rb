@@ -1,0 +1,3 @@
+module Lms
+  class 
+end
