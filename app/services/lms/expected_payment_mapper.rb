@@ -1,5 +1,5 @@
 module Lms
-  class DailyExpectedPaymentMapper
+  class ExpectedPaymentAndEventsMapper
     DATE_ID_FORMAT = "%Y-%m-%d"
     attr_accessor :loan
 
@@ -12,7 +12,7 @@ module Lms
       when "daily"
       when "weekly"
       when "monthly"
-        create_daily_expected_payment_map_for_monthly
+        create_expected_payment_map_for_monthly
       when "quarterly"
       when "biannualy"
       when "annualy"
@@ -21,7 +21,7 @@ module Lms
 
     private
 
-    def create_daily_expected_payment_map_for_monthly
+    def create_expected_payment_map_for_monthly
       map = {}
       period_start_date = loan.start_date
 

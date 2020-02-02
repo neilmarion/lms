@@ -1,5 +1,5 @@
 module Lms
-  class CalculateLoanExpectedPaymentDates
+  class InitialLoanExpectedPayments
     attr_accessor :loan
 
     def initialize(loan)
@@ -7,16 +7,15 @@ module Lms
     end
 
     def execute
-      dates = []
+      expected_payments = {}
       period_start_date = loan.start_date
 
       loan.period_count.times do
-        dates << period_start_date.strftime(DailyInterestMapper::DATE_ID_FORMAT)
-
+        expected_payments[period_start_date.strftime(DailyInterestMapper::DATE_ID_FORMAT)] = loan.expected_payment_per_period
         period_start_date = period_start_date.next_month
       end
 
-      dates
+      expected_payments
     end
   end
 end

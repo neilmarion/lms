@@ -1,3 +1,0 @@
-module Lms
-  class 
-end

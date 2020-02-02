@@ -6,7 +6,7 @@ class CreateLmsLoans < ActiveRecord::Migration[5.0]
       t.integer :period_count
       t.string :period
       t.timestamp :start_date
-      t.jsonb :expected_payment_dates
+      t.jsonb :expected_payments
 
       t.timestamps
     end
