@@ -3,11 +3,11 @@ module Lms
     has_many :actual_events
 
     def daily_interest_map
-      DailyInterestMapper.new(self).execute
+      @daily_interest_map ||= DailyInterestMapper.new(self).execute
     end
 
     def daily_expected_payment_map
-      DailyExpectedPaymentMapper.new(self).execute
+      @daily_expected_payment_map ||= DailyExpectedPaymentMapper.new(self).execute
     end
 
     def expected_payment_per_period
