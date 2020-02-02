@@ -12,8 +12,8 @@ module Lms
       @daily_expected_payment_map ||= DailyExpectedPaymentMapper.new(self).execute
     end
 
-    def current_scenario
-      @current_scenario ||= LoanScenarioMachine.new(self).execute
+    def current_scenario(scenario)
+      @current_scenario ||= LoanScenarioMachine.new(self).execute(scenario)
     end
 
     def expected_payment_per_period

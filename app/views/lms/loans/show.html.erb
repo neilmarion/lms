@@ -66,7 +66,7 @@ table.paleBlueRows tfoot td {
     <th>events summary</th>
     <th>expected payment</th>
   </tr>
-<% @loan.current_scenario.each do |row| %>
+<% @loan.current_scenario("actual_and_expected").each do |row| %>
   <tr class="<%= row[:events_summary].present? ? 'summary' : 'none' %> <%= row[:expected].present? ? 'expected' : 'none' %>">
     <td><%= row[:date] %></td>
     <td><%= row[:aaa_bal].round(2) %></td>

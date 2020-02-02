@@ -6,13 +6,13 @@ module Lms
       @loan = loan
     end
 
-    def execute
-      build_scenario
+    def execute(scenario)
+      build_scenario(scenario)
     end
 
     private
 
-    def build_scenario
+    def build_scenario(scenario)
       # date
       # aaa_bal = beginning balance
       # aaa_pri = beginning principal
@@ -44,14 +44,21 @@ module Lms
         expected: nil,
       }
 
-      expected_payment(start_date)
+      # Remove scheduled repayments if they
+      # are supposed to be overriden by actual events
+      expected_payments = loan.expected_payments
+      expected_payments.keys do |date|
+        if DateTime.parse(date) <= DateTime.parse(loan.actual_events.pluck(:date).sort.last)
+          expected_payments.delete(date)
+        end
+      end
 
       loan.daily_interest_map.map do |date, int|
         aaa_bal = temp[:zzz_bal]
         aaa_pri = temp[:zzz_pri]
         day_int = temp[:zzz_pri] * int
         tot_int = temp[:zzz_int] + day_int
-        tot_chg = sum_of_changes(date)
+        tot_chg = sum_of_changes(date, expected_payments, scenario)
         int_chg = 0
         pri_chg = 0
 
@@ -88,16 +95,20 @@ module Lms
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,
           events_summary: events_summary(date),
-          expected: expected_payment(date),
+          expected: expected_payment(expected_payments, date),
         }
 
         temp
       end.unshift(first)
     end
 
-    def sum_of_changes(date)
+    def sum_of_changes(date, expected_payments, scenario)
+      if scenario == "actual_and_expected"
+        return (expected_payments[date] || 0)*-1
+      end
+
       amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
-      amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
+      return amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
     end
 
     def events_summary(date)
@@ -111,16 +122,7 @@ module Lms
       end.join("; ")
     end
 
-    def expected_payment(date)
-      # Remove scheduled repayments if they
-      # are supposed to be overriden by actual events
-      expected_payments = loan.expected_payments
-      expected_payments.keys do |date|
-        if DateTime.parse(date) <= DateTime.parse(loan.actual_events.pluck(:date).sort.last)
-          expected_payments.delete(date)
-        end
-      end
-
+    def expected_payment(expected_payments, date)
       if expected_payment = expected_payments[date]
         {
           expected_tot_payment: expected_payment,
