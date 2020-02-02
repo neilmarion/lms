@@ -1,6 +1,7 @@
 module Lms
   class LoansController < ApplicationController
     before_filter :convert_amount_to_integer, only: [:update]
+    before_filter :convert_custom_payment_amount_to_integer, only: [:create_custom_payment]
 
     def show
       @loan = Loan.find(params[:id])
@@ -20,7 +21,6 @@ module Lms
     end
 
     def create_custom_payment
-      binding.pry
       @loan = Loan.find(params[:id])
       custom_payments = @loan.custom_payments
       custom_payments[params[:date]] = params[:loan][:amount]
@@ -46,6 +46,11 @@ module Lms
     def convert_amount_to_integer
       loan_params["actual_events_attributes"]["0"]["data"]["amount"] =
         loan_params["actual_events_attributes"]["0"]["data"]["amount"].to_f
+    end
+
+    def convert_custom_payment_amount_to_integer
+      params[:loan][:amount] =
+        params[:loan][:amount].to_f
     end
   end
 end

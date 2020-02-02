@@ -42,6 +42,7 @@ module Lms
         zzz_bal: loan.amount,
         events_summary: nil,
         expected: nil,
+        custom_payment: nil,
       }
 
       # Remove scheduled repayments if they
@@ -54,12 +55,19 @@ module Lms
       #  end
       #end
 
+      # Custom payments must be overridden by actual events
+      event_dates = loan.actual_events.pluck(:date)
+      custom_payments = loan.custom_payments
+      custom_payments.keys.each do |date|
+        custom_payments.delete(date) if event_dates.include? date
+      end
+
       loan.daily_interest_map.map do |date, int|
         aaa_bal = temp[:zzz_bal]
         aaa_pri = temp[:zzz_pri]
         day_int = temp[:zzz_pri] * int
         tot_int = temp[:zzz_int] + day_int
-        tot_chg = sum_of_changes(date, expected_payments, scenario)
+        tot_chg = sum_of_changes(date, expected_payments, custom_payments, scenario)
         int_chg = 0
         pri_chg = 0
 
@@ -95,17 +103,28 @@ module Lms
           zzz_int: zzz_int,
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,
-          events_summary: scenario == "actual" ? events_summary(date) : nil,
+          events_summary: scenario == "actual" || scenario == "actual_and_custom" ? events_summary(date) : nil,
           expected: expected_payment(expected_payments, date, scenario),
+          custom_payment: scenario == "actual_and_custom" ? custom_payments[date] : nil,
         }
 
         temp
       end.unshift(first)
     end
 
-    def sum_of_changes(date, expected_payments, scenario)
+    def sum_of_changes(date, expected_payments, custom_payments, scenario)
       if scenario == "expected"
         return (expected_payments[date] || 0)*-1
+      elsif scenario == "actual_and_custom"
+        amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
+        event_amounts = (amounts.inject(0){ |sum, tuple| sum += tuple["amount"] })
+
+        #binding.pry if date == "2020-02-23"
+        if event_amounts != 0
+          return event_amounts
+        else
+          return custom_payments[date].to_f
+        end
       end
 
       amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
@@ -124,7 +143,7 @@ module Lms
     end
 
     def expected_payment(expected_payments, date, scenario)
-      return if scenario == "actual"
+      return if scenario == "actual" || scenario == "actual_and_custom"
       if expected_payment = expected_payments[date]
         {
           expected_tot_payment: expected_payment,
