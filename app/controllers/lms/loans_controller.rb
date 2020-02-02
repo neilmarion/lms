@@ -19,6 +19,28 @@ module Lms
       )
     end
 
+    def create_custom_payment
+      binding.pry
+      @loan = Loan.find(params[:id])
+      custom_payments = @loan.custom_payments
+      custom_payments[params[:date]] = params[:loan][:amount]
+      @loan.update_attributes(custom_payments: custom_payments)
+      redirect_to loan_path(@loan.id)
+    end
+
+    def delete_custom_payment
+      @loan = Loan.find(params[:id])
+      custom_payments = @loan.custom_payments
+      custom_payments.delete(params[:date])
+      @loan.update_attributes(custom_payments: custom_payments)
+      redirect_to loan_path(@loan.id)
+    end
+
+    def show_custom_payment
+      @loan = Loan.find(params[:id])
+      @custom_payment = @loan.custom_payments[params[:date]]
+    end
+
     # NOTE: Since number_field does not
     # seem to convert inputs to integer
     def convert_amount_to_integer

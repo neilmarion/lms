@@ -1,0 +1,11 @@
+<% if @custom_payment %>
+  <%= @custom_payment %>
+  <%= button_to "delete", delete_custom_payment_loan_path(@loan.id, date: params[:date]), method: :patch %><br>
+<% else %>
+  Make sure this is negative!
+  <%= form_for @loan, as: :loan, url: create_custom_payment_loan_path(@loan.id, date: params[:date]), method: :patch do |f| %>
+    <%= text_field_tag 'loan[amount]' %>
+    <%= f.submit "create" %>
+  <% end %>
+<% end %>
+
