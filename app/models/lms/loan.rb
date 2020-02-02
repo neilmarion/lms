@@ -13,7 +13,9 @@ module Lms
       @daily_expected_payment_map ||= DailyExpectedPaymentMapper.new(self).execute
     end
 
-    def current_scenario(scenario)
+    def current_scenario(scenario="actual")
+      # NOTE: Not sure why default parameters not working
+      scenario = scenario || "actual"
       @current_scenario ||= LoanScenarioMachine.new(self).execute(scenario)
     end
 

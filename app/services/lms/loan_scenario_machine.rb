@@ -47,12 +47,12 @@ module Lms
       # Remove scheduled repayments if they
       # are supposed to be overriden by actual events
       expected_payments = loan.expected_payments
-      event_dates = loan.actual_events.pluck(:date).sort
-      expected_payments.keys.each do |date|
-        if event_dates.last && DateTime.parse(date) <= DateTime.parse(event_dates.last)
-          expected_payments.delete(date)
-        end
-      end
+      #event_dates = loan.actual_events.pluck(:date).sort
+      #expected_payments.keys.each do |date|
+      #  if event_dates.last && DateTime.parse(date) <= DateTime.parse(event_dates.last)
+      #    expected_payments.delete(date)
+      #  end
+      #end
 
       loan.daily_interest_map.map do |date, int|
         aaa_bal = temp[:zzz_bal]
@@ -95,7 +95,7 @@ module Lms
           zzz_int: zzz_int,
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,
-          events_summary: events_summary(date),
+          events_summary: scenario == "actual" ? events_summary(date) : nil,
           expected: expected_payment(expected_payments, date, scenario),
         }
 
@@ -104,18 +104,12 @@ module Lms
     end
 
     def sum_of_changes(date, expected_payments, scenario)
-      amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
-      events_changes = amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
-
-      if events_changes != 0
-        events_changes
-      else
-        if scenario == "actual_and_expected"
-          return (expected_payments[date] || 0)*-1
-        else
-          return 0
-        end
+      if scenario == "expected"
+        return (expected_payments[date] || 0)*-1
       end
+
+      amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
+      amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
     end
 
     def events_summary(date)
@@ -130,7 +124,8 @@ module Lms
     end
 
     def expected_payment(expected_payments, date, scenario)
-      if expected_payment = expected_payments[date] && scenario == "actual_and_expected"
+      return if scenario == "actual"
+      if expected_payment = expected_payments[date]
         {
           expected_tot_payment: expected_payment,
         }
