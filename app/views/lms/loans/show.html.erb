@@ -7,6 +7,7 @@ table.paleBlueRows {
   border-collapse: collapse;
 }
 table.paleBlueRows td, table.paleBlueRows th {
+  font-size: 13px;
   border: 1px solid #FFFFFF;
   padding: 3px 2px;
 }
@@ -16,12 +17,15 @@ table.paleBlueRows tbody td {
 table.paleBlueRows tr:nth-child(even) {
   background: #D0E4F5;
 }
+table.paleBlueRows tr.summary {
+  background: #1abc9c;
+}
 table.paleBlueRows thead {
   background: #0B6FA4;
   border-bottom: 5px solid #FFFFFF;
 }
 table.paleBlueRows thead th {
-  font-size: 17px;
+  font-size: 4px;
   font-weight: bold;
   color: #FFFFFF;
   text-align: center;
@@ -32,7 +36,7 @@ table.paleBlueRows thead th:first-child {
 }
 
 table.paleBlueRows tfoot {
-  font-size: 14px;
+  font-size: 4px;
   font-weight: bold;
   color: #333333;
   background: #D0E4F5;
@@ -56,9 +60,10 @@ table.paleBlueRows tfoot td {
     <th>ending interest</th>
     <th>ending principal</th>
     <th>ending balance</th>
+    <th>events summary</th>
   </tr>
 <% @loan.current_scenario.each do |row| %>
-  <tr>
+  <tr class="<%= row[:events_summary].present? ? 'summary' : 'none' %>">
     <td><%= row[:date] %></td>
     <td><%= row[:aaa_bal].round(2) %></td>
     <td><%= row[:aaa_pri].round(2) %></td>
@@ -70,6 +75,7 @@ table.paleBlueRows tfoot td {
     <td><%= row[:zzz_int].round(2) %></td>
     <td><%= row[:zzz_pri].round(2) %></td>
     <td><%= row[:zzz_bal].round(2) %></td>
+    <td><%= row[:events_summary] %></td>
   </tr>
 <% end %>
 </table>

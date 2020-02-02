@@ -39,6 +39,7 @@ module Lms
         zzz_int: 0,
         zzz_pri: loan.amount,
         zzz_bal: loan.amount,
+        events_summary: nil,
       }
 
       loan.daily_interest_map.map do |date, int|
@@ -82,6 +83,7 @@ module Lms
           zzz_int: zzz_int,
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,
+          events_summary: events_summary(date),
         }
 
         temp
@@ -91,6 +93,17 @@ module Lms
     def sum_of_changes(date)
       amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
       amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
+    end
+
+    def events_summary(date)
+      events = loan.actual_events.where(date: date, name: "change").pluck(:data)
+      events.map do |e|
+        if e["amount"] >= 0
+          "Topped up #{e["amount"]}"
+        else
+          "Paid #{-1*e["amount"]}"
+        end
+      end.join("; ")
     end
   end
 end
