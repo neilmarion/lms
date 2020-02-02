@@ -50,6 +50,9 @@ table.paleBlueRows tfoot td {
 }
 </style>
 
+<%= link_to "Actual", loan_path(@loan.id, scenario: "actual") %>
+<%= link_to "Actual and Expected", loan_path(@loan.id, scenario: "actual_and_expected") %>
+
 <table class="paleBlueRows">
   <tr>
     <th>date</th>
@@ -66,7 +69,7 @@ table.paleBlueRows tfoot td {
     <th>events summary</th>
     <th>expected payment</th>
   </tr>
-<% @loan.current_scenario("actual_and_expected").each do |row| %>
+<% @current_scenario.each do |row| %>
   <tr class="<%= row[:events_summary].present? ? 'summary' : 'none' %> <%= row[:expected].present? ? 'expected' : 'none' %>">
     <td><%= row[:date] %></td>
     <td><%= row[:aaa_bal].round(2) %></td>

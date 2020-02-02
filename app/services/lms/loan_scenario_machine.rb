@@ -47,8 +47,9 @@ module Lms
       # Remove scheduled repayments if they
       # are supposed to be overriden by actual events
       expected_payments = loan.expected_payments
-      expected_payments.keys do |date|
-        if DateTime.parse(date) <= DateTime.parse(loan.actual_events.pluck(:date).sort.last)
+      event_dates = loan.actual_events.pluck(:date).sort
+      expected_payments.keys.each do |date|
+        if event_dates.last && DateTime.parse(date) <= DateTime.parse(event_dates.last)
           expected_payments.delete(date)
         end
       end
@@ -103,12 +104,18 @@ module Lms
     end
 
     def sum_of_changes(date, expected_payments, scenario)
-      if scenario == "actual_and_expected"
-        return (expected_payments[date] || 0)*-1
-      end
-
       amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
-      return amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
+      events_changes = amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
+
+      if events_changes != 0
+        events_changes
+      else
+        if scenario == "actual_and_expected"
+          return (expected_payments[date] || 0)*-1
+        else
+          return 0
+        end
+      end
     end
 
     def events_summary(date)
