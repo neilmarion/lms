@@ -28,7 +28,7 @@ module Lms
       # zzz_bal = ending balance
 
       first = temp = {
-        date: "-",
+        date: loan.start_date.strftime(DailyInterestMapper::DATE_ID_FORMAT),
         aaa_bal: 0,
         aaa_pri: 0,
         day_int: 0,
