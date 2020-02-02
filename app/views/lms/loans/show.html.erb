@@ -56,6 +56,8 @@ table.paleBlueRows tfoot td {
 <%= link_to "Actual", loan_path(@loan.id, scenario: "actual") %>
 <%= link_to "Expected", loan_path(@loan.id, scenario: "expected") %>
 <%= link_to "Actual and Custom", loan_path(@loan.id, scenario: "actual_and_custom") %>
+<br>
+<%= link_to "Collapse", loan_path(@loan.id, scenario: params[:scenario], collapse: true) %>
 
 <h3><%= params[:scenario] %></h3>
 
@@ -78,28 +80,58 @@ table.paleBlueRows tfoot td {
     <th></th>
     <th></th>
   </tr>
-<% @current_scenario.each do |row| %>
-  <tr class="<%= row[:events_summary].present? ? 'summary' : nil %> <%= row[:expected].present? ? 'expected' : nil %> <%= row[:custom_payment].present? ? 'custom_payment' : nil %>">
-    <td><%= row[:date] %></td>
-    <td><%= row[:aaa_bal].round(2) %></td>
-    <td><%= row[:aaa_pri].round(2) %></td>
-    <td><%= row[:day_int].round(2) %></td>
-    <td><%= row[:tot_int].round(2) %></td>
-    <td><%= row[:tot_chg].round(2) %></td>
-    <td><%= row[:int_chg].round(2) %></td>
-    <td><%= row[:pri_chg].round(2) %></td>
-    <td><%= row[:zzz_int].round(2) %></td>
-    <td><%= row[:zzz_pri].round(2) %></td>
-    <td><%= row[:zzz_bal].round(2) %></td>
-    <td><%= row[:events_summary] %></td>
-    <td><%= row[:expected].try(:[], :expected_tot_payment)&.round(2) %></td>
-    <th><%= link_to "Create Event", new_loan_actual_event_path(@loan.id, date: row[:date]) %></th>
-    <th><%= link_to "Events", loan_actual_events_path(@loan.id, date: row[:date]) %></th>
-    <th>
-      <% if params[:scenario] == "actual_and_custom" %>
-        <%= link_to (@loan.custom_payments[row[:date]] || "Create Custom Payment"), show_custom_payment_loan_path(@loan.id, date: row[:date]) %>
-      <% end %>
-    </th>
-  </tr>
+<% if params[:collapse] && params[:scenario] != "actual" %>
+  <% @current_scenario.each do |row| %>
+    <% if (params[:scenario] == "expected" && row[:expected].present?) || (params[:scenario] == "actual_and_custom" && (row[:events_summary].present? || row[:custom_payment].present?)) %>
+      <tr class="<%= row[:events_summary].present? ? 'summary' : nil %> <%= row[:expected].present? ? 'expected' : nil %> <%= row[:custom_payment].present? ? 'custom_payment' : nil %>">
+        <td><%= row[:date] %></td>
+        <td><%= row[:aaa_bal].round(2) %></td>
+        <td><%= row[:aaa_pri].round(2) %></td>
+        <td><%= row[:day_int].round(2) %></td>
+        <td><%= row[:tot_int].round(2) %></td>
+        <td><%= row[:tot_chg].round(2) %></td>
+        <td><%= row[:int_chg].round(2) %></td>
+        <td><%= row[:pri_chg].round(2) %></td>
+        <td><%= row[:zzz_int].round(2) %></td>
+        <td><%= row[:zzz_pri].round(2) %></td>
+        <td><%= row[:zzz_bal].round(2) %></td>
+        <td><%= row[:events_summary] %></td>
+        <td><%= row[:expected].try(:[], :expected_tot_payment)&.round(2) %></td>
+        <th><%= link_to "Create Event", new_loan_actual_event_path(@loan.id, date: row[:date]) %></th>
+        <th><%= link_to "Events", loan_actual_events_path(@loan.id, date: row[:date]) %></th>
+        <th>
+          <% if params[:scenario] == "actual_and_custom" %>
+            <%= link_to (@loan.custom_payments[row[:date]] || "Create Custom Payment"), show_custom_payment_loan_path(@loan.id, date: row[:date]) %>
+          <% end %>
+        </th>
+      </tr>
+    <% else %>
+    <% end %>
+  <% end %>
+<% else %>
+  <% @current_scenario.each do |row| %>
+    <tr class="<%= row[:events_summary].present? ? 'summary' : nil %> <%= row[:expected].present? ? 'expected' : nil %> <%= row[:custom_payment].present? ? 'custom_payment' : nil %>">
+      <td><%= row[:date] %></td>
+      <td><%= row[:aaa_bal].round(2) %></td>
+      <td><%= row[:aaa_pri].round(2) %></td>
+      <td><%= row[:day_int].round(2) %></td>
+      <td><%= row[:tot_int].round(2) %></td>
+      <td><%= row[:tot_chg].round(2) %></td>
+      <td><%= row[:int_chg].round(2) %></td>
+      <td><%= row[:pri_chg].round(2) %></td>
+      <td><%= row[:zzz_int].round(2) %></td>
+      <td><%= row[:zzz_pri].round(2) %></td>
+      <td><%= row[:zzz_bal].round(2) %></td>
+      <td><%= row[:events_summary] %></td>
+      <td><%= row[:expected].try(:[], :expected_tot_payment)&.round(2) %></td>
+      <th><%= link_to "Create Event", new_loan_actual_event_path(@loan.id, date: row[:date]) %></th>
+      <th><%= link_to "Events", loan_actual_events_path(@loan.id, date: row[:date]) %></th>
+      <th>
+        <% if params[:scenario] == "actual_and_custom" %>
+          <%= link_to (@loan.custom_payments[row[:date]] || "Create Custom Payment"), show_custom_payment_loan_path(@loan.id, date: row[:date]) %>
+        <% end %>
+      </th>
+    </tr>
+  <% end %>
 <% end %>
 </table>
