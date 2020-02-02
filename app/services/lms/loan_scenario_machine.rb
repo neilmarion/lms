@@ -1,6 +1,6 @@
 module Lms
   class LoanScenarioMachine
-    attr_accessor :loan
+    attr_accessor :loan, :balance
 
     def initialize(loan)
       @loan = loan
@@ -43,6 +43,7 @@ module Lms
         events_summary: nil,
         expected: nil,
         custom_payment: nil,
+        past: nil,
       }
 
       # Remove scheduled repayments if they
@@ -106,7 +107,12 @@ module Lms
           events_summary: scenario == "actual" || scenario == "actual_and_custom" ? events_summary(date) : nil,
           expected: expected_payment(expected_payments, date, scenario),
           custom_payment: scenario == "actual_and_custom" ? custom_payments[date] : nil,
+          past: date <= loan.date_pointer,
         }
+
+        if date == loan.date_pointer
+          self.balance = zzz_bal
+        end
 
         temp
       end.unshift(first)
@@ -119,7 +125,6 @@ module Lms
         amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
         event_amounts = (amounts.inject(0){ |sum, tuple| sum += tuple["amount"] })
 
-        #binding.pry if date == "2020-02-23"
         if event_amounts != 0
           return event_amounts
         else

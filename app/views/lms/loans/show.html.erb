@@ -23,6 +23,9 @@ table.paleBlueRows tr.summary {
 table.paleBlueRows tr.expected {
   background: #f1c40f;
 }
+table.paleBlueRows tr.past {
+  background: #bdc3c7;
+}
 table.paleBlueRows tr.custom_payment {
   background: #3498db;
 }
@@ -59,7 +62,9 @@ table.paleBlueRows tfoot td {
 <br>
 <%= link_to "Collapse", loan_path(@loan.id, scenario: params[:scenario], collapse: true) %>
 
-<h3><%= params[:scenario] %></h3>
+<h3><%= params[:scenario] %></h3><br>
+
+<h1>BALANCE: <%= @loan.current_balance.round(2) %></h1>
 
 <table class="paleBlueRows">
   <tr>
@@ -113,7 +118,17 @@ table.paleBlueRows tfoot td {
   <% end %>
 <% else %>
   <% @current_scenario.each do |row| %>
-    <tr class="<%= row[:events_summary].present? ? 'summary' : nil %> <%= row[:expected].present? ? 'expected' : nil %> <%= row[:custom_payment].present? ? 'custom_payment' : nil %>">
+    <% clas = if row[:events_summary].present? %>
+    <% "summary" %>
+    <% elsif row[:expected].present? %>
+    <% "expected" %>
+    <% elsif row[:custom_payment].present? %>
+    <% "custom_payment" %>
+    <% elsif row[:past].present? %>
+    <% "past" %>
+    <% end %>
+
+    <tr class="<%= clas %>">
       <td><%= row[:date] %></td>
       <td><%= row[:aaa_bal].round(2) %></td>
       <td><%= row[:aaa_pri].round(2) %></td>

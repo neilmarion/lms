@@ -16,7 +16,11 @@ module Lms
     def current_scenario(scenario="actual")
       # NOTE: Not sure why default parameters not working
       scenario = scenario || "actual"
-      @current_scenario ||= LoanScenarioMachine.new(self).execute(scenario)
+      @current_scenario ||= scenario_service.execute(scenario)
+    end
+
+    def current_balance
+      scenario_service.balance
     end
 
     def expected_payment_per_period
@@ -30,6 +34,10 @@ module Lms
     def calculate_expected_payments
       expected_payment_dates = InitialLoanExpectedPayments.new(self).execute
       update_attributes(expected_payments: expected_payment_dates)
+    end
+
+    def scenario_service
+      @scenario_service ||= LoanScenarioMachine.new(self)
     end
   end
 end
