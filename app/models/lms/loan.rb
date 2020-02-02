@@ -10,6 +10,10 @@ module Lms
       @daily_expected_payment_map ||= DailyExpectedPaymentMapper.new(self).execute
     end
 
+    def current_scenario
+      @current_scenario ||= LoanScenarioMachine.new(self).execute
+    end
+
     def expected_payment_per_period
       @payment_per_period ||= AmortizationCalculator.payment_per_period({
         amount: amount,

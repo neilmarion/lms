@@ -12,7 +12,7 @@ module Lms
 
     private
 
-    def build_scenario(config)
+    def build_scenario
       # date
       # aaa_bal = beginning balance
       # aaa_pri = beginning principal
@@ -26,23 +26,22 @@ module Lms
       # zzz_int = ending interest
       # zzz_pri = ending principal
       # zzz_bal = ending balance
-      #
 
-      temp = {
+      first = temp = {
         date: "-",
-        aaa_bal: nil,
-        aaa_pri: nil,
-        day_int: nil,
-        tot_int: nil,
-        tot_chg: nil,
-        int_chg: nil,
-        pri_chg: nil,
+        aaa_bal: 0,
+        aaa_pri: 0,
+        day_int: 0,
+        tot_int: 0,
+        tot_chg: 0,
+        int_chg: 0,
+        pri_chg: 0,
         zzz_int: 0,
         zzz_pri: loan.amount,
         zzz_bal: loan.amount,
       }
 
-      loan.interest_map.map do |date, int|
+      loan.daily_interest_map.map do |date, int|
         aaa_bal = temp[:zzz_bal]
         aaa_pri = temp[:zzz_pri]
         day_int = temp[:zzz_pri] * int
@@ -68,10 +67,10 @@ module Lms
         end
 
         zzz_int = tot_int + int_chg
-        zzz_pri = tot_pri + pri_chg
+        zzz_pri = aaa_pri + pri_chg
         zzz_bal = aaa_bal + day_int + tot_chg
 
-        {
+        temp = {
           date: date,
           aaa_bal: aaa_bal,
           aaa_pri: aaa_pri,
@@ -84,11 +83,14 @@ module Lms
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,
         }
-      end
 
-      def sum_of_changes(date)
-        loan.events.where(date: date, name: "change").sum
-      end
+        temp
+      end.unshift(first)
+    end
+
+    def sum_of_changes(date)
+      amounts = loan.actual_events.where(date: date, name: "change").pluck(:data)
+      amounts.inject(0){ |sum, tuple| sum += tuple[:amount] }
     end
   end
 end
