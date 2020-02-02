@@ -1,6 +1,7 @@
 module Lms
   class Loan < ApplicationRecord
     has_many :actual_events
+    accepts_nested_attributes_for :actual_events
 
     after_create :calculate_expected_payments
 

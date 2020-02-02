@@ -68,6 +68,8 @@ table.paleBlueRows tfoot td {
     <th>ending balance</th>
     <th>events summary</th>
     <th>expected payment</th>
+    <th></th>
+    <th></th>
   </tr>
 <% @current_scenario.each do |row| %>
   <tr class="<%= row[:events_summary].present? ? 'summary' : 'none' %> <%= row[:expected].present? ? 'expected' : 'none' %>">
@@ -84,6 +86,8 @@ table.paleBlueRows tfoot td {
     <td><%= row[:zzz_bal].round(2) %></td>
     <td><%= row[:events_summary] %></td>
     <td><%= row[:expected].try(:[], :expected_tot_payment)&.round(2) %></td>
+    <th><%= link_to "Create Event", new_loan_actual_event_path(@loan.id, date: row[:date]) %></th>
+    <th><%= link_to "Events", loan_actual_events_path(@loan.id, date: row[:date]) %></th>
   </tr>
 <% end %>
 </table>
