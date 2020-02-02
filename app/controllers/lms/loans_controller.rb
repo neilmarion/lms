@@ -41,6 +41,12 @@ module Lms
       @custom_payment = @loan.custom_payments[params[:date]]
     end
 
+    def change_date_pointer
+      @loan = Loan.find(params[:id])
+      @loan.update_attributes(date_pointer: params[:date])
+      redirect_to loan_path(@loan.id, scenario: params[:scenario])
+    end
+
     # NOTE: Since number_field does not
     # seem to convert inputs to integer
     def convert_amount_to_integer

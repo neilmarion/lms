@@ -79,6 +79,7 @@ table.paleBlueRows tfoot td {
     <th></th>
     <th></th>
     <th></th>
+    <th></th>
   </tr>
 <% if params[:collapse] && params[:scenario] != "actual" %>
   <% @current_scenario.each do |row| %>
@@ -103,6 +104,8 @@ table.paleBlueRows tfoot td {
           <% if params[:scenario] == "actual_and_custom" %>
             <%= link_to (@loan.custom_payments[row[:date]] || "Create Custom Payment"), show_custom_payment_loan_path(@loan.id, date: row[:date]) %>
           <% end %>
+        </th>
+        <th>
         </th>
       </tr>
     <% else %>
@@ -130,6 +133,9 @@ table.paleBlueRows tfoot td {
         <% if params[:scenario] == "actual_and_custom" %>
           <%= link_to (@loan.custom_payments[row[:date]] || "Create Custom Payment"), show_custom_payment_loan_path(@loan.id, date: row[:date]) %>
         <% end %>
+      </th>
+      <th>
+        <%= link_to "go here", change_date_pointer_loan_path(@loan.id, date: row[:date], scenario: params[:scenario]) %>
       </th>
     </tr>
   <% end %>
