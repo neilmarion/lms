@@ -3,6 +3,15 @@ module Lms
     before_filter :convert_amount_to_integer, only: [:update]
     before_filter :convert_custom_payment_amount_to_integer, only: [:create_custom_payment]
 
+    def new
+      @loan = Loan.new
+    end
+
+    def create
+      @loan = Loan.create(loan_params)
+      redirect_to loan_path(@loan.id)
+    end
+
     def show
       @loan = Loan.find(params[:id])
       @current_scenario = @loan.current_scenario(params[:scenario])
@@ -16,6 +25,7 @@ module Lms
 
     def loan_params
       @loan_params ||= params.require(:loan).permit(
+        :period, :amount, :interest, :period_count, :start_date,
         actual_events_attributes: [{data: :amount}, :date, :name],
       )
     end

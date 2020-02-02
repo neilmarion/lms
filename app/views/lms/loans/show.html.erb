@@ -64,7 +64,7 @@ table.paleBlueRows tfoot td {
 
 <h3><%= params[:scenario] %></h3><br>
 
-<h1>BALANCE: <%= @loan.current_balance.round(2) %></h1>
+<h1>BALANCE: <%= @loan.current_balance.to_f.round(2) %></h1>
 
 <table class="paleBlueRows">
   <tr>

@@ -107,7 +107,7 @@ module Lms
           events_summary: scenario == "actual" || scenario == "actual_and_custom" ? events_summary(date) : nil,
           expected: expected_payment(expected_payments, date, scenario),
           custom_payment: scenario == "actual_and_custom" ? custom_payments[date] : nil,
-          past: date <= loan.date_pointer,
+          past: loan.date_pointer ? date <= loan.date_pointer : nil,
         }
 
         if date == loan.date_pointer
