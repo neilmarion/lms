@@ -96,7 +96,7 @@ module Lms
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,
           events_summary: events_summary(date),
-          expected: expected_payment(expected_payments, date),
+          expected: expected_payment(expected_payments, date, scenario),
         }
 
         temp
@@ -129,8 +129,8 @@ module Lms
       end.join("; ")
     end
 
-    def expected_payment(expected_payments, date)
-      if expected_payment = expected_payments[date]
+    def expected_payment(expected_payments, date, scenario)
+      if expected_payment = expected_payments[date] && scenario == "actual_and_expected"
         {
           expected_tot_payment: expected_payment,
         }
