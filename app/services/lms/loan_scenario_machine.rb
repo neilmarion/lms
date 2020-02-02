@@ -112,7 +112,16 @@ module Lms
     end
 
     def expected_payment(date)
-      if expected_payment = loan.expected_payments[date]
+      # Remove scheduled repayments if they
+      # are supposed to be overriden by actual events
+      expected_payments = loan.expected_payments
+      expected_payments.keys do |date|
+        if DateTime.parse(date) <= DateTime.parse(loan.actual_events.pluck(:date).sort.last)
+          expected_payments.delete(date)
+        end
+      end
+
+      if expected_payment = expected_payments[date]
         {
           expected_tot_payment: expected_payment,
         }
