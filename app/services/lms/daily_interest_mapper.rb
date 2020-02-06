@@ -23,7 +23,7 @@ module Lms
 
     def create_daily_interest_map_for_monthly
       map = {}
-      period_start_date = loan.start_date + 1.day
+      period_start_date = loan.start_date
 
       loan.period_count.times do
         range = period_start_date.to_date..period_start_date.next_month.to_date
