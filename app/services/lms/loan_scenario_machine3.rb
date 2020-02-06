@@ -1,12 +1,13 @@
 module Lms
   class LoanScenarioMachine3
-    attr_accessor :loan, :balance
+    attr_accessor :loan, :adjustment_events
 
-    def initialize(loan)
+    def initialize(loan, adjustment_events)
       @loan = loan
+      @adjustment_events = adjustment_events
     end
 
-    def execute
+    def execute()
       build_scenario
     end
 
@@ -106,12 +107,15 @@ module Lms
     end
 
     def sum_of_changes(date)
-      amounts = loan.actual_events.where(date: date, name: ["change", "bal_change"]).pluck(:data)
-      amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
+      amounts = loan.actual_events.where(date: date, name: ["change"]).pluck(:data)
+      actual_events_sum = amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
+
+      adjustment_events_sum = adjustment_events.select{ |ae| ae[:date] == date }.map{ |ae| ae[:amount] }.sum
+      actual_events_sum + adjustment_events_sum
     end
 
     def events_summary(date)
-      events = loan.actual_events.where(date: date, name: ["change", "bal_change"]).pluck(:data)
+      events = loan.actual_events.where(date: date, name: ["change"]).pluck(:data)
       events.map do |e|
         if e["amount"] >= 0
           "Topped up #{e["amount"]}"

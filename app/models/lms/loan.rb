@@ -39,7 +39,8 @@ module Lms
     end
 
     def execute_balancing
-      Lms::BalanceComputer.new(self).execute
+      adjustment_events = Lms::BalanceComputer.new(self).execute
+      binding.pry
     end
   end
 end
