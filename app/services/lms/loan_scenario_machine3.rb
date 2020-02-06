@@ -110,7 +110,7 @@ module Lms
       amounts = loan.actual_events.where(date: date, name: ["change"]).pluck(:data)
       actual_events_sum = amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
 
-      expected_payment = if date > loan.actual_events.last.date
+      expected_payment = if loan.actual_events.present? && date > loan.actual_events.last.date
         loan.expected_payments[date].to_f
       end
 

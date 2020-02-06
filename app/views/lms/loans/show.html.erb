@@ -59,7 +59,7 @@ table.paleBlueRows tfoot td {
 <%= link_to "Collapse", loan_path(@loan.id, scenario: params[:scenario], collapse: true) %>
 <%= link_to "Uncollapse", loan_path(@loan.id, scenario: params[:scenario]) %>
 
-<h1>BALANCE: <%= @loan.current_balance.to_f.round(2) %></h1>
+<h3>BALANCE: <%= @loan.adjustment_summary.html_safe %></h3>
 
 <table class="paleBlueRows">
   <tr>

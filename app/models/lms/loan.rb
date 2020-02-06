@@ -53,30 +53,31 @@ module Lms
       when "early"
         expected_payments_temp = {}
         self.expected_payments.each do |x, y|
-          expected_payments_temp[x] = y
+          expected_payments_temp[x] = y if x > self.actual_events.last.date
         end
 
-        self.expected_payments.keys.each do |date|
+
+        expected_payments_temp.keys.each do |date|
           expected_payments_temp[date] = self.expected_payments[date] - adjustment_events.select{ |x| x[:date] == date }.map{ |x| x[:amount] }.sum
         end
 
         schedule = expected_payments_temp.map do |date, amount|
-          "#{date} - #{amount}"
+          "#{date} - #{amount.round(2)}"
         end
 
         balance = expected_payments_temp.values.sum
 
-        "CURRENT BALANCE: #{balance}<br>Customer paid early hence the adjustments to the repayment schedule<br>#{schedule.join('<br>')}"
+        "CURRENT BALANCE: #{balance.round(2)}<br>Customer paid early hence the adjustments to the repayment schedule<br>#{schedule.join('<br>')}"
       when "late"
-        additional_payment = adjustment_events.map{ |x| x[:amount] }.sum
+        additional_payment = adjustment_events.map{ |x| x[:amount] }.sum.round(2)
 
         balance = initial_balance - additional_payment + self.actual_events.map{ |x| x.data["amount"] }.sum
 
-        "CURRENT BALANCE: #{balance}<br>Customer paid late hence an additional payment of #{additional_payment} on #{adjustment_events.first[:date]}"
+        "CURRENT BALANCE: #{balance.round(2)}<br>Customer paid late hence an additional payment of #{-1*additional_payment} on #{adjustment_events.first[:date]}"
       else
-        balance = initial_balance - self.actual_events.map{ |x| x.data["amount"] }.sum
+        balance = initial_balance + self.actual_events.map{ |x| x.data["amount"] }.sum.round(2)
 
-        "CURRENT BALANCE: #{balance}<br>No Adjustments needed"
+        "CURRENT BALANCE: #{balance.round(2)}<br>No Adjustments needed"
       end
     end
   end

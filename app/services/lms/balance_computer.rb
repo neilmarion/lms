@@ -13,9 +13,11 @@ module Lms
       scenario = Lms::LoanScenarioMachine3.new(loan, []).execute
 
       row = find_row_by_date(scenario, date_of_balance)
-      if row[:zzz_bal].round(2) < 0
+      return nil if loan.actual_events.blank?
+      # NOTE: Before, this is round(2). But changed to round(0) to ignore very minute values like 0.000006
+      if row[:zzz_bal].round(0) < 0
         traverse_until_balanced_for_early_payment(expected_payment_dates, date_of_balance)
-      elsif row[:zzz_bal].round(2) > 0
+      elsif row[:zzz_bal].round(0) > 0
         date_to_manipulate = loan.actual_events.last.date
         traverse_until_balanced_for_late_payment(expected_payment_dates, date_of_balance, date_to_manipulate)
       end
