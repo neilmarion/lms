@@ -14,10 +14,8 @@ module Lms
 
       row = find_row_by_date(scenario, date_of_balance)
       if row[:zzz_bal].round(2) < 0
-        binding.pry
         traverse_until_balanced_for_early_payment(expected_payment_dates, date_of_balance)
       elsif row[:zzz_bal].round(2) > 0
-        binding.pry
         date_to_manipulate = loan.actual_events.last.date
         traverse_until_balanced_for_late_payment(expected_payment_dates, date_of_balance, date_to_manipulate)
       end
@@ -49,7 +47,7 @@ module Lms
         break if find_row_by_date(scenario, date_of_balance)[:zzz_bal].round(2) == 0
       end
 
-      adjustment_events
+      [adjustment_events, "early"]
     end
 
     def traverse_until_balanced_for_late_payment(expected_payment_dates, date_of_balance, date_to_manipulate)
@@ -69,7 +67,7 @@ module Lms
         end
       end
 
-      adjustment_events
+      [adjustment_events, "late"]
     end
   end
 end

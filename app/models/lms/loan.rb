@@ -39,8 +39,44 @@ module Lms
     end
 
     def execute_balancing
-      adjustment_events = Lms::BalanceComputer.new(self).execute
-      binding.pry
+      @adjustment_events, @happened = Lms::BalanceComputer.new(self).execute
+    end
+
+    def initial_balance
+      @initial_balance ||= self.expected_payments.values.sum
+    end
+
+    def adjustment_summary
+      adjustment_events, happened = execute_balancing
+
+      case happened
+      when "early"
+        expected_payments_temp = self.expected_payments
+
+        self.expected_payments.keys.each do |date|
+          expected_payments_temp[date] = self.expected_payments[date] - adjustment_events.select{ |x| x[:date] == date }.map{ |x| x[:amount] }.sum
+        end
+
+        schedule = expected_payments_temp.map do |date, amount|
+          "#{date} - #{amount}"
+        end
+
+        balance = initial_balance - adjustment_events.map{|x| x.data["amount"]}.sum - self.actual_events.map{ |x| x.data["amount"] }.sum
+
+        "CURRENT BALANCE: #{balance}<br>Customer paid early hence the adjustments to the repayment schedule<br>#{schedule.join('<br>')}"
+      when "late"
+        additional_payment = adjustment_events.map{ |x| x[:amount] }.sum
+
+        binding.pry
+
+        balance = initial_balance - additional_payment - self.actual_events.map{ |x| x.data["amount"] }.sum
+
+        "CURRENT BALANCE: #{balance}<br>Customer paid late hence an additional payment of #{additional_payment} on #{adjustment_events.first[:date]}"
+      else
+        balance = initial_balance - self.actual_events.map{ |x| x.data["amount"] }.sum
+
+        "CURRENT BALANCE: #{balance}<br>No Adjustments needed"
+      end
     end
   end
 end
