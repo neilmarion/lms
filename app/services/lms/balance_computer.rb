@@ -10,7 +10,7 @@ module Lms
       expected_payment_dates = Lms::Loan.last.expected_payments.keys
       date_of_balance = expected_payment_dates.last
 
-      scenario = Lms::LoanScenarioMachine2.new(loan).execute
+      scenario = Lms::LoanScenarioMachine3.new(loan, []).execute
 
       row = find_row_by_date(scenario, date_of_balance)
       if row[:zzz_bal].round(2) < 0
