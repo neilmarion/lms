@@ -37,7 +37,7 @@ module Lms
     end
 
     def scenario_service
-      @scenario_service ||= LoanScenarioMachine.new(self)
+      @scenario_service ||= LoanScenarioMachine2.new(self)
     end
   end
 end

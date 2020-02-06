@@ -1,5 +1,5 @@
 module Lms
-  class LoanStateBuilder
+  class LoanScenarioMachine2
     attr_accessor :loan, :balance
 
     def initialize(loan)
@@ -55,7 +55,7 @@ module Lms
         int_chg = 0
         pri_chg = 0
 
-        calculate_events
+        int_chg, pri_chg = calculate_events(tot_chg, tot_int)
 
         zzz_int = tot_int + int_chg
         zzz_pri = aaa_pri + pri_chg
@@ -83,7 +83,7 @@ module Lms
       end.unshift(first)
     end
 
-    def calculate_events(total_chg)
+    def calculate_events(tot_chg, tot_int)
       int_chg = 0
       pri_chg = 0
       # If tot_chg is negative, that means
