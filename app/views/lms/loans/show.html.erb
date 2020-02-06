@@ -57,6 +57,7 @@ table.paleBlueRows tfoot td {
 </style>
 
 <%= link_to "Collapse", loan_path(@loan.id, scenario: params[:scenario], collapse: true) %>
+<%= link_to "Uncollapse", loan_path(@loan.id, scenario: params[:scenario]) %>
 
 <h1>BALANCE: <%= @loan.current_balance.to_f.round(2) %></h1>
 
@@ -74,8 +75,6 @@ table.paleBlueRows tfoot td {
     <th>ending principal</th>
     <th>ending balance</th>
     <th>events summary</th>
-    <th>expected payment</th>
-    <th></th>
     <th></th>
     <th></th>
   </tr>
@@ -95,11 +94,8 @@ table.paleBlueRows tfoot td {
         <td><%= row[:zzz_pri].round(2) %></td>
         <td><%= row[:zzz_bal].round(2) %></td>
         <td><%= row[:events_summary] %></td>
-        <td><%= row[:expected].try(:[], :expected_tot_payment)&.round(2) %></td>
         <th><%= link_to "Create Event", new_loan_actual_event_path(@loan.id, date: row[:date]) %></th>
         <th><%= link_to "Events", loan_actual_events_path(@loan.id, date: row[:date]) %></th>
-        <th>
-        </th>
       </tr>
     <% else %>
     <% end %>
@@ -119,12 +115,8 @@ table.paleBlueRows tfoot td {
       <td><%= row[:zzz_pri].round(2) %></td>
       <td><%= row[:zzz_bal].round(2) %></td>
       <td><%= row[:events_summary] %></td>
-      <td><%= row[:expected].try(:[], :expected_tot_payment)&.round(2) %></td>
       <th><%= link_to "Create Event", new_loan_actual_event_path(@loan.id, date: row[:date]) %></th>
       <th><%= link_to "Events", loan_actual_events_path(@loan.id, date: row[:date]) %></th>
-      <th>
-        <%= link_to "go here", change_date_pointer_loan_path(@loan.id, date: row[:date], scenario: params[:scenario]) %>
-      </th>
     </tr>
   <% end %>
 <% end %>
