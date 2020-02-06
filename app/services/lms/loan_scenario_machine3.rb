@@ -1,5 +1,5 @@
 module Lms
-  class LoanScenarioMachine2
+  class LoanScenarioMachine3
     attr_accessor :loan, :balance
 
     def initialize(loan)
@@ -106,12 +106,12 @@ module Lms
     end
 
     def sum_of_changes(date)
-      amounts = loan.actual_events.where(date: date, name: ["change"]).pluck(:data)
+      amounts = loan.actual_events.where(date: date, name: ["change", "bal_change"]).pluck(:data)
       amounts.inject(0){ |sum, tuple| sum += tuple["amount"] }
     end
 
     def events_summary(date)
-      events = loan.actual_events.where(date: date, name: ["change"]).pluck(:data)
+      events = loan.actual_events.where(date: date, name: ["change", "bal_change"]).pluck(:data)
       events.map do |e|
         if e["amount"] >= 0
           "Topped up #{e["amount"]}"
