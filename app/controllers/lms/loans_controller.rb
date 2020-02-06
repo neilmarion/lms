@@ -14,7 +14,7 @@ module Lms
 
     def show
       @loan = Loan.find(params[:id])
-      @current_scenario = @loan.current_scenario(params[:scenario])
+      @current_scenario = @loan.current_scenario
     end
 
     def update

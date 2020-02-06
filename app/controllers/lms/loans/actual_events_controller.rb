@@ -7,7 +7,7 @@ module Lms
       end
 
       def index
-        @actual_events = @loan.actual_events.where(date: params[:date])
+        @actual_events = @loan.actual_events.where(date: params[:date], name: "change")
       end
 
       def destroy
