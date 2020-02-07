@@ -1,7 +1,7 @@
 module Lms
   class Loan < ApplicationRecord
-    has_many :actual_events
-    accepts_nested_attributes_for :actual_events
+    has_many :actual_transactions
+    accepts_nested_attributes_for :actual_transactions
 
     has_many :expected_payments
     accepts_nested_attributes_for :expected_payments
@@ -32,7 +32,7 @@ module Lms
     end
 
     def balance
-      expected_payments.pluck(:amount).sum - actual_event.pluck(:amount).sum
+      expected_transactions.pluck(:amount).sum - actual_transactions.pluck(:amount).sum
     end
   end
 end

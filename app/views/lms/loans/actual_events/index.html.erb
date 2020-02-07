@@ -1,5 +1,0 @@
-<% @actual_events.each do |a| %>
-  <%= a.data["amount"] %> <%= button_to "delete", loan_actual_event_path(@loan.id, a.id), method: :delete, data: { confirm: 'Are you sure?' } %><br>
-<% end %>
-
-

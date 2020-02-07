@@ -1,8 +1,0 @@
-<%= form_for @loan do |f| %>
-  <%= f.fields_for :actual_events, @loan.actual_events.new do |f| %>
-    <%= text_field_tag 'loan[actual_events_attributes][0][data][amount]' %>
-    <%= f.hidden_field :date, value: params[:date] %>
-    <%= f.hidden_field :name, value: "change" %>
-  <% end %>
-  <%= f.submit "create" %>
-<% end %>
