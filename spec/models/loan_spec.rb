@@ -13,11 +13,6 @@ module Lms
       })
     end
 
-    it "calculates initial repayment schedule" do
-      result = loan.initial_repayment_schedule
-      expect(result).to eq ({"2020-04-01"=>50751.24378109451, "2020-05-01"=>50751.24378109451})
-    end
-
     it "creates the first expected payments after creation" do
       result = loan.expected_payments.first
       expect(result.name).to eq "initial_balance"

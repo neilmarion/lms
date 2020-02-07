@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20200201123402) do
   create_table "lms_expected_payments", force: :cascade do |t|
     t.string   "name"
     t.float    "amount"
+    t.date     "date"
     t.integer  "loan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -39,9 +40,8 @@ ActiveRecord::Schema.define(version: 20200201123402) do
     t.integer  "period_count"
     t.string   "period"
     t.datetime "start_date"
-    t.jsonb    "initial_repayment_schedule", default: {}
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
 end

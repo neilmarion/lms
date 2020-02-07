@@ -1,7 +1,7 @@
 require "rails_helper"
 
 module Lms
-  describe InitialExpectedPaymentsMapper do
+  describe InitialRepaymentScheduleMapper do
     let(:expected_result) {
       {
         "2020-04-01"=>50751.24378109451,
