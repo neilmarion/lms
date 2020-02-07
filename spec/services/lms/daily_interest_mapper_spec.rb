@@ -72,16 +72,7 @@ module Lms
 
     it "gives daily interest rate for a monthly period loan" do
       start_date = DateTime.strptime("2020-03-01", "%Y-%m-%d")
-
-      loan = Loan.create({
-        amount: 100000,
-        interest: 0.01,
-        period_count: 2,
-        start_date: start_date,
-        period: "monthly",
-      })
-
-      result = described_class.new(loan).execute
+      result = described_class.new(start_date, 0.01, "monthly", 2).execute
       expect(expected_result).to eq result
     end
   end
