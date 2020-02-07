@@ -10,19 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200201123401) do
+ActiveRecord::Schema.define(version: 20200201123402) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "lms_actual_events", force: :cascade do |t|
     t.string   "name"
-    t.jsonb    "data"
-    t.string   "date"
+    t.float    "amount"
     t.integer  "loan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["loan_id"], name: "index_lms_actual_events_on_loan_id", using: :btree
+  end
+
+  create_table "lms_expected_payments", force: :cascade do |t|
+    t.string   "name"
+    t.float    "amount"
+    t.integer  "loan_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["loan_id"], name: "index_lms_expected_payments_on_loan_id", using: :btree
   end
 
   create_table "lms_loans", force: :cascade do |t|
@@ -31,9 +39,9 @@ ActiveRecord::Schema.define(version: 20200201123401) do
     t.integer  "period_count"
     t.string   "period"
     t.datetime "start_date"
-    t.jsonb    "expected_payments", default: {}
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.jsonb    "initial_payment_schedule", default: {}
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
   end
 
 end

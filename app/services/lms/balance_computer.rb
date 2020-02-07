@@ -7,7 +7,7 @@ module Lms
     end
 
     def execute
-      expected_payment_dates = Lms::Loan.last.expected_payments.keys
+      expected_payment_dates = Lms::Loan.last.initial_repayment_schedule.keys
       date_of_balance = expected_payment_dates.last
 
       scenario = Lms::LoanScenarioMachine3.new(loan, []).execute
