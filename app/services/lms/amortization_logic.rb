@@ -12,6 +12,11 @@ module Lms
       build_table
     end
 
+    def add_event(added_event)
+      events << added_event
+      events.compact!
+    end
+
     private
 
     def build_table

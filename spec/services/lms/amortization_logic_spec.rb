@@ -81,7 +81,7 @@ module Lms
         pri_chg: 0,
         zzz_int: 1000.0,
         zzz_pri: 100000.0,
-        zzz_bal: 101000.0
+        zzz_bal: 101000.0,
       }
     }
 
