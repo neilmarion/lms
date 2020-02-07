@@ -80,35 +80,38 @@ module Lms
     let(:date_of_balance) { "2020-05-01" }
     let(:amount) { 100000 }
     let(:amortization_logic) do
-      AmortizationLogic.new(amount, daily_interest_map, events)
+      AmortizationLogic.new(amount, daily_interest_map, transactions)
     end
 
     context "customer paid late" do
-      let(:last_event_date) { "2020-04-06" }
-      let(:events) do
+      let(:remaining_balance) do
+        base_payments.values.sum
+      end
+      let(:current_date) { "2020-04-06" }
+      let(:transactions) do
         [
-          { date: last_event_date, amount: -50751.24378109451 },
           { date: "2020-05-01", amount: -50751.24378109451 },
         ]
       end
       let(:expected_result) do
         [
-          { date: "2020-04-06", amount: -83.61091964942898 },
+          {:amount=>-83.61063173724688, :date=>"2020-04-06"}
         ]
       end
 
       specify do
-        logic = described_class.new(amortization_logic, base_payments, date_of_balance, last_event_date)
+        logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date, remaining_balance)
         result = logic.execute
         expect(expected_result).to eq result
       end
     end
 
     context "customer paid early" do
-      let(:last_event_date) { "2020-03-20" }
-      let(:events) do
+      let(:remaining_balance) { nil }
+      let(:current_date) { "2020-03-20" }
+      let(:transactions) do
         [
-          { date: last_event_date, amount: -60000 },
+          { date: "2020-03-20", amount: -60000 },
           { date: "2020-04-01", amount: -50751.24378109451 },
           { date: "2020-05-01", amount: -50751.24378109451 },
         ]
@@ -121,7 +124,7 @@ module Lms
       end
 
       specify do
-        logic = described_class.new(amortization_logic, base_payments, date_of_balance, last_event_date)
+        logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date, remaining_balance)
         result = logic.execute
       end
     end

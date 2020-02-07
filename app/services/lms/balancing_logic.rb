@@ -1,12 +1,13 @@
 module Lms
   class BalancingLogic
-    attr_accessor :base_payments, :date_of_balance, :amortization_logic, :last_transaction_date
+    attr_accessor :base_payments, :date_of_balance, :amortization_logic, :transaction_date, :remaining_balance
 
-    def initialize(amortization_logic, base_payments, date_of_balance, last_transaction_date)
+    def initialize(amortization_logic, base_payments, date_of_balance, transaction_date, remaining_balance)
       @amortization_logic = amortization_logic
       @date_of_balance = date_of_balance
       @base_payments = base_payments
-      @last_transaction_date = last_transaction_date
+      @transaction_date = transaction_date
+      @remaining_balance = remaining_balance
     end
 
     def execute
@@ -53,16 +54,16 @@ module Lms
     def balance_after_late
       loop.inject([]) do |adjustment_transactions|
         table = amortization_logic.execute
-        return merge_to_one(adjustment_transactions) if table[date_of_balance][:zzz_bal].round(2) == 0
+        return calculate_adjustment if table[date_of_balance][:zzz_bal].round(2) == 0
 
-        adjustment_transactions << { date: last_transaction_date, amount: -1*table[date_of_balance][:zzz_bal] }
+        adjustment_transactions << { date: transaction_date, amount: -1*table[date_of_balance][:zzz_bal] }
         amortization_logic.add_transaction(adjustment_transactions.last)
         adjustment_transactions
       end
     end
 
-    def merge_to_one(adjustment_transactions)
-      [{ date: last_transaction_date, amount: adjustment_transactions.map{ |x| x[:amount] }.sum }]
+    def calculate_adjustment
+      [{ date: transaction_date, amount: amortization_logic.transactions.map{ |x| x[:amount] }.sum + remaining_balance }]
     end
   end
 end

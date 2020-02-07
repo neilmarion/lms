@@ -1,13 +1,14 @@
 module Lms
   class LoanStateBuilder
-    attr_accessor :loan
+    attr_accessor :loan, :current_date
 
-    def initialize
+    def initialize(loan, current_date)
       @loan = loan
+      @current_date = current_date
     end
 
     def execute
-      actual_txns = transform_transactions(loan.actual_transactions)
+      actual_txns = transform_transactions(realized_actual_transactions)
       expected_txns = transform_transactions(unrealized_expected_transactions)
       txns = actual_txns + expected_txns
 
@@ -17,9 +18,13 @@ module Lms
 
     private
 
+    def realized_actual_transactions
+      loan.actual_transactions.where("date < ?", current_date)
+    end
+
     def unrealized_expected_transactions
       loan.expected_transactions.
-        where("date > ?", loan.actual_transactions.last.date)
+        where("date >= ?", current_date)
     end
 
     def daily_interest_map
