@@ -29,5 +29,9 @@ module Lms
     def initial_balance
       @initial_balance ||= self.initial_repayment_schedule.values.sum
     end
+
+    def balance
+      expected_payments.pluck(:amount).sum - actual_event.pluck(:amount).sum
+    end
   end
 end

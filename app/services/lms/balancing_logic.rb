@@ -53,12 +53,16 @@ module Lms
     def balance_after_late
       loop.inject([]) do |adjustment_events|
         table = amortization_logic.execute
-        return adjustment_events if table[date_of_balance][:zzz_bal].round(2) == 0
+        return merge_to_one(adjustment_events) if table[date_of_balance][:zzz_bal].round(2) == 0
 
         adjustment_events << { date: last_event_date, amount: -1*table[date_of_balance][:zzz_bal] }
         amortization_logic.add_event(adjustment_events.last)
         adjustment_events
       end
+    end
+
+    def merge_to_one(adjustment_events)
+      [{ date: last_event_date, amount: adjustment_events.map{ |x| x[:amount] }.sum }]
     end
   end
 end
