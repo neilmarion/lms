@@ -1,5 +1,5 @@
 module Lms
-  class ActualEvent < ApplicationRecord
+  class ActualTransaction < ApplicationRecord
     belongs_to :loan
   end
 end

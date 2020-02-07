@@ -1,20 +1,20 @@
 module Lms
   class AmortizationLogic
-    attr_accessor :amount, :daily_interest_map, :events
+    attr_accessor :amount, :daily_interest_map, :transactions
 
-    def initialize(amount, daily_interest_map, events)
+    def initialize(amount, daily_interest_map, transactions)
       @amount = amount
       @daily_interest_map = daily_interest_map
-      @events = events
+      @transactions = transactions
     end
 
     def execute
       build_table
     end
 
-    def add_event(added_event)
-      events << added_event
-      events.compact!
+    def add_transaction(added_transaction)
+      transactions << added_transaction
+      transactions.compact!
     end
 
     private
@@ -40,7 +40,7 @@ module Lms
         aaa_pri = temp[:zzz_pri]
         day_int = temp[:zzz_pri].to_f * int
         tot_int = temp[:zzz_int].to_f + day_int
-        tot_chg = event_amount_sum(date)
+        tot_chg = transaction_amount_sum(date)
         int_chg = 0
         pri_chg = 0
 
@@ -88,8 +88,8 @@ module Lms
       return int_chg, pri_chg
     end
 
-    def event_amount_sum(date)
-      amounts = events.select{ |x| x[:date] == date }.map{ |x| x[:amount] }.sum
+    def transaction_amount_sum(date)
+      amounts = transactions.select{ |x| x[:date] == date }.map{ |x| x[:amount] }.sum
     end
   end
 end
