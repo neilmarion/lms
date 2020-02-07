@@ -6,8 +6,6 @@ class CreateLmsLoans < ActiveRecord::Migration[5.0]
       t.integer :period_count
       t.string :period
       t.timestamp :start_date
-      t.string :date_pointer
-      t.jsonb :custom_payments, default: {}
       t.jsonb :expected_payments, default: {}
 
       t.timestamps

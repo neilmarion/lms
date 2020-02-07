@@ -12,7 +12,7 @@ module Lms
       when "daily"
       when "weekly"
       when "monthly"
-        create_daily_interest_map_for_monthly
+        daily_interests_for_monthly
       when "quarterly"
       when "biannualy"
       when "annualy"
@@ -21,22 +21,24 @@ module Lms
 
     private
 
-    def create_daily_interest_map_for_monthly
-      map = {}
+    def daily_interests_for_monthly
       period_start_date = loan.start_date + 1.day
+      loan.period_count.times.inject({}) do |hash, index|
+        range = if index == 0
+          (period_start_date.to_date-1.day)..period_start_date.next_month.to_date
+        else
+          period_start_date.to_date..period_start_date.next_month.to_date
+        end
 
-      loan.period_count.times do
-        range = period_start_date.to_date..period_start_date.next_month.to_date
         daily_interest = loan.interest / (range.count - 1)
 
         range.map{ |date| date.strftime(DATE_ID_FORMAT) }.map.with_index do |day, i|
-          map[day] = daily_interest
+          hash[day] = daily_interest
         end
 
         period_start_date = period_start_date.next_month
+        hash
       end
-
-      map
     end
   end
 end
