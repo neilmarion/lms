@@ -5,19 +5,11 @@ module Lms
 
     after_create :calculate_initial_repayment_schedule
 
-    def daily_interest_map
-      @daily_interest_map ||= DailyInterestMapper.new(self).execute
-    end
-
-    def daily_expected_payment_map
-      @daily_expected_payment_map ||= DailyExpectedPaymentMapper.new(self).execute
-    end
-
     def expected_payment_per_period
       @payment_per_period ||= AmortizationCalculator.payment_per_period({
         amount: amount,
         interest: interest,
-        period_count: period_count
+        period_count: period_count,
       })
     end
 

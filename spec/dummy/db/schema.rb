@@ -39,9 +39,9 @@ ActiveRecord::Schema.define(version: 20200201123402) do
     t.integer  "period_count"
     t.string   "period"
     t.datetime "start_date"
-    t.jsonb    "initial_payment_schedule", default: {}
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.jsonb    "initial_repayment_schedule", default: {}
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
   end
 
 end
