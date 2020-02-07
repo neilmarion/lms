@@ -30,7 +30,7 @@ module Lms
     end
 
     def calculate_expected_payments
-      expected_payment_dates = InitialLoanExpectedPayments.new(self).execute
+      expected_payment_dates = InitialExpectedPaymentsMapper.new(self).execute
       update_attributes(expected_payments: expected_payment_dates)
     end
 
