@@ -79,7 +79,7 @@ module Lms
     let(:date_of_balance) { "2020-05-01" }
     let(:amount) { 100000 }
     let(:amortization_logic) do
-      AmortizationLogic.new(amount, daily_interest_map, transactions)
+      SequenceLogic.new(amount, daily_interest_map, transactions)
     end
 
     context "customer paid late" do

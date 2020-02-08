@@ -1,5 +1,5 @@
 module Lms
-  class AmortizationLogic
+  class SequenceLogic
     attr_accessor :amount, :daily_interest_map, :transactions
 
     def initialize(amount, daily_interest_map, transactions)

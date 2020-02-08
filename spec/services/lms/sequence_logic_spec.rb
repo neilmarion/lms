@@ -1,7 +1,7 @@
 require "rails_helper"
 
 module Lms
-  describe AmortizationLogic do
+  describe SequenceLogic do
     let(:daily_interest_map) {
       {
        "2020-03-01":0.0003125,
