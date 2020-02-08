@@ -3,10 +3,10 @@ module Lms
     has_many :actual_transactions
     accepts_nested_attributes_for :actual_transactions
 
-    has_many :expected_payments
-    accepts_nested_attributes_for :expected_payments
+    has_many :expected_transactions
+    accepts_nested_attributes_for :expected_transactions
 
-    after_create :create_initial_repayments
+    after_create :create_initial_expected_transactions
 
     def expected_payment_per_period
       @payment_per_period ||= AmortizationCalculator.payment_per_period({
@@ -16,13 +16,13 @@ module Lms
       })
     end
 
-    def create_initial_repayments
-      initial_repayment_schedule = InitialRepaymentScheduleMapper.new(self).execute
+    def create_initial_expected_transactions
+      initial_repayment_schedule = InitialExpectedTransactionsScheduleMapper.new(self).execute
       initial_repayment_schedule.map do |date, value|
-        expected_payments.create({
+        expected_transactions.create({
           date: date,
           amount: initial_balance,
-          name: ExpectedPayment::INITIAL_BALANCE,
+          kind: ExpectedTransaction::INITIAL_BALANCE,
         })
       end
     end

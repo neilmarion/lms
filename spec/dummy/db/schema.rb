@@ -15,23 +15,23 @@ ActiveRecord::Schema.define(version: 20200201123402) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "lms_actual_events", force: :cascade do |t|
-    t.string   "name"
+  create_table "lms_actual_transactions", force: :cascade do |t|
+    t.string   "type"
     t.float    "amount"
     t.integer  "loan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["loan_id"], name: "index_lms_actual_events_on_loan_id", using: :btree
+    t.index ["loan_id"], name: "index_lms_actual_transactions_on_loan_id", using: :btree
   end
 
-  create_table "lms_expected_payments", force: :cascade do |t|
-    t.string   "name"
+  create_table "lms_expected_transactions", force: :cascade do |t|
+    t.string   "kind"
     t.float    "amount"
-    t.string   "date"
+    t.date     "date"
     t.integer  "loan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["loan_id"], name: "index_lms_expected_payments_on_loan_id", using: :btree
+    t.index ["loan_id"], name: "index_lms_expected_transactions_on_loan_id", using: :btree
   end
 
   create_table "lms_loans", force: :cascade do |t|

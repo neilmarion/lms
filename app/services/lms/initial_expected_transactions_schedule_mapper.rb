@@ -1,5 +1,5 @@
 module Lms
-  class InitialRepaymentScheduleMapper
+  class InitialExpectedTransactionsScheduleMapper
     attr_accessor :loan
 
     def initialize(loan)
