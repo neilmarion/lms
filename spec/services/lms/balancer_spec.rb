@@ -33,7 +33,7 @@ module Lms
     end
 
     context "when customer pays late but pays additional interest" do
-      let(:current_date) { "2020-04-06" }
+      let(:current_date) { "2020-04-02" }
       it "creates expected transactions accordingly in order to balance" do
         expected_txns_count = loan.expected_transactions.count
         expect {
@@ -48,6 +48,29 @@ module Lms
           balancer.execute
           expected_txns_count = loan.expected_transactions.count
         }.not_to change{ expected_txns_count }.from 5
+
+        # NOTE: Remove below
+
+        expected_txns_count = loan.expected_transactions.count
+        expect {
+          balancer = described_class.new(loan, "2020-04-03".to_date)
+          balancer.execute
+          expected_txns_count = loan.expected_transactions.count
+        }.to change{ expected_txns_count }.from 5
+
+        expected_txns_count = loan.expected_transactions.count
+        expect {
+          balancer = described_class.new(loan, "2020-04-04".to_date)
+          balancer.execute
+          expected_txns_count = loan.expected_transactions.count
+        }.to change{ expected_txns_count }.from 6
+
+        expected_txns_count = loan.expected_transactions.count
+        expect {
+          balancer = described_class.new(loan, "2020-04-05".to_date)
+          balancer.execute
+          expected_txns_count = loan.expected_transactions.count
+        }.to change{ expected_txns_count }.from 7
       end
     end
 
