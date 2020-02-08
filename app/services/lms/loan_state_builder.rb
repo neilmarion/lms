@@ -1,6 +1,6 @@
 module Lms
   class LoanStateBuilder
-    attr_accessor :loan, :current_date
+    attr_accessor :loan, :current_date, :logic
 
     def initialize(loan, current_date)
       @loan = loan

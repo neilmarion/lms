@@ -42,7 +42,6 @@ module Lms
           expected_txns_count = loan.expected_transactions.count
         }.to change{ expected_txns_count }.from 4
 
-        binding.pry
         # NOTE: No more expected transactions must be created after balancing
         expect {
           balancer = described_class.new(loan, current_date.to_date)

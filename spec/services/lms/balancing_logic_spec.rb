@@ -99,7 +99,7 @@ module Lms
       end
 
       specify do
-        logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date)
+        logic = described_class.new(amortization_logic, base_payments.keys, date_of_balance, current_date)
         result, state = logic.execute
         expect(state).to eq "late"
         expect(result).to eq expected_result
@@ -117,7 +117,7 @@ module Lms
       end
 
       specify do
-        logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date)
+        logic = described_class.new(amortization_logic, base_payments.keys, date_of_balance, current_date)
         table, state = logic.execute
         expect(state).to eq "early"
         # NOTE: This should be the new values of the expected repayments

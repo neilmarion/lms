@@ -14,7 +14,6 @@ module Lms
       if is_early?(table)
         [balance_after_early, "early"]
       elsif is_late?(table)
-        binding.pry
         [balance_after_late, "late"]
       end
     end
@@ -23,12 +22,11 @@ module Lms
 
     def is_early?(table)
       row = table[date_of_balance]
-      row[:zzz_bal].round(0) < 0
+      row[:zzz_bal].round(0) <= 0
     end
 
     def is_late?(table)
       row = table[date_of_balance]
-      binding.pry
       row[:zzz_bal].round(0) > 0
     end
 
