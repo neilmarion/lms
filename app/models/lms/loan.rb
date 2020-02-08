@@ -22,13 +22,13 @@ module Lms
         expected_transactions.create({
           date: date,
           amount: value[:interest],
-          kind: ExpectedTransaction::INTEREST,
+          kind: ExpectedTransaction::INIT_INTEREST,
         })
 
         expected_transactions.create({
           date: date,
           amount: value[:principal],
-          kind: ExpectedTransaction::PRINCIPAL,
+          kind: ExpectedTransaction::INIT_PRINCIPAL,
         })
       end
     end

@@ -1,11 +1,11 @@
 module Lms
   class BalancingLogic
-    attr_accessor :base_payments, :date_of_balance, :amortization_logic, :transaction_date, :remaining_balance
+    attr_accessor :base_payment_schedule, :date_of_balance, :amortization_logic, :transaction_date, :remaining_balance
 
-    def initialize(amortization_logic, base_payments, date_of_balance, transaction_date, remaining_balance)
+    def initialize(amortization_logic, base_payment_schedule, date_of_balance, transaction_date, remaining_balance)
       @amortization_logic = amortization_logic
       @date_of_balance = date_of_balance
-      @base_payments = base_payments
+      @base_payment_schedule = base_payment_schedule
       @transaction_date = transaction_date
       @remaining_balance = remaining_balance
     end
@@ -40,7 +40,7 @@ module Lms
         return adjustment_transactions if table[date_of_balance][:zzz_bal].round(2) == 0
 
         table.each do |date, row|
-          if (base_payments.keys.include? date) && (row[:zzz_bal].round(2) < 0)
+          if (base_payment_schedule.include? date) && (row[:zzz_bal].round(2) < 0)
             adjustment_transactions << { date: date, amount: row[:zzz_bal]*-1 }
             amortization_logic.add_transaction(adjustment_transactions.last)
             break

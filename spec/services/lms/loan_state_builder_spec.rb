@@ -18,7 +18,8 @@ module Lms
       let(:current_date) { start_date }
       it "builds the loan state that will balance on the balance date" do
         service = described_class.new(loan, start_date.to_date)
-        result = service.execute
+        builder = service.execute
+        result = builder.execute
         expect(result[balance_date][:zzz_bal].round(2)).to eq 0
       end
     end
@@ -38,7 +39,8 @@ module Lms
 
       it "builds the loan state that will balance on the balance date" do
         service = described_class.new(loan, current_date)
-        result = service.execute
+        builder = service.execute
+        result = builder.execute
         expect(result[balance_date][:zzz_bal].round(2)).to eq 0
       end
     end
@@ -67,7 +69,8 @@ module Lms
 
       it "builds the loan state that will balance on the balance date" do
         service = described_class.new(loan, current_date)
-        result = service.execute
+        builder = service.execute
+        result = builder.execute
         expect(result[balance_date][:zzz_bal].round(2)).to eq 0
       end
     end
@@ -90,7 +93,8 @@ module Lms
       # NOTE: balance was 101,502 but now it's only 101,210
       it "builds the loan state that will balance on the balance date" do
         service = described_class.new(loan, current_date)
-        result = service.execute
+        builder = service.execute
+        result = builder.execute
         expect(result[balance_date][:zzz_bal].round(2)).to eq 0
       end
     end

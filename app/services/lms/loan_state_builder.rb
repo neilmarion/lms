@@ -12,8 +12,7 @@ module Lms
       expected_txns = transform_transactions(unrealized_expected_transactions)
       txns = actual_txns + expected_txns
 
-      logic = Lms::AmortizationLogic.new(loan.amount, daily_interest_map, txns)
-      logic.execute
+      Lms::AmortizationLogic.new(loan.amount, daily_interest_map, txns)
     end
 
     private
