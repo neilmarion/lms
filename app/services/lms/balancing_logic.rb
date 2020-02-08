@@ -15,9 +15,9 @@ module Lms
       return nil if amortization_logic.blank?
       # NOTE: Before, this is round(2). But changed to round(0) to ignore very minute values like 0.000006
       if is_early?(table)
-        balance_after_early
+        [balance_after_early, "early"]
       elsif is_late?(table)
-        balance_after_late
+        [balance_after_late, "late"]
       end
     end
 

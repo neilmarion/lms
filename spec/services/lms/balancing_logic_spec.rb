@@ -95,7 +95,7 @@ module Lms
       let(:expected_result) do
         #{ interest: -83.61063173724688, date: "2020-04-06" }
         # NOTE: remaining_balance + new_balance in order to get -83.61063173724688
-        { new_balance: -101586.09819392627 }
+        [{ new_balance: -101586.09819392627 }, "late"]
       end
 
       specify do
@@ -117,7 +117,9 @@ module Lms
 
       specify do
         logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date)
-        table = logic.execute
+        result = logic.execute
+        table = result.first
+        expect(result.last).to eq "early"
         # NOTE: This should be the new values of the expected repayments
         expect(table["2020-04-01"][:pri_chg]).to eq -40625.0
         expect(table["2020-04-01"][:int_chg]).to eq -152.34375
