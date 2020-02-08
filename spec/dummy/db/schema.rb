@@ -18,9 +18,13 @@ ActiveRecord::Schema.define(version: 20200201123402) do
   create_table "lms_actual_transactions", force: :cascade do |t|
     t.string   "kind"
     t.float    "amount"
+    t.string   "note"
+    t.float    "fee_amount"
+    t.float    "interest_amount"
+    t.float    "principal_amount"
     t.integer  "loan_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.index ["loan_id"], name: "index_lms_actual_transactions_on_loan_id", using: :btree
   end
 
@@ -28,6 +32,7 @@ ActiveRecord::Schema.define(version: 20200201123402) do
     t.string   "kind"
     t.float    "amount"
     t.date     "date"
+    t.string   "note"
     t.integer  "loan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -39,6 +44,7 @@ ActiveRecord::Schema.define(version: 20200201123402) do
     t.float    "interest"
     t.integer  "period_count"
     t.string   "period"
+    t.string   "status"
     t.datetime "start_date"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false

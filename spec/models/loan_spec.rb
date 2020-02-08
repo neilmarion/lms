@@ -25,6 +25,7 @@ module Lms
         x.delete("id")
         x.delete("created_at")
         x.delete("updated_at")
+        x.delete("note")
         x
       end
 

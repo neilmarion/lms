@@ -5,6 +5,7 @@ class CreateLmsLoans < ActiveRecord::Migration[5.0]
       t.float :interest
       t.integer :period_count
       t.string :period
+      t.string :status
       t.timestamp :start_date
 
       t.timestamps

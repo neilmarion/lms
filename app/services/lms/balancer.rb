@@ -1,6 +1,6 @@
 module Lms
   class Balancer
-    attr_accessor :loan, :current_date, :table
+    attr_accessor :loan, :current_date
 
     def initialize(loan, current_date)
       @loan = loan
@@ -14,9 +14,9 @@ module Lms
       balancing_logic = BalancingLogic.new(sequence_logic, initial_repayment_dates, date_of_balance, current_date)
       adjustments, result = balancing_logic.execute
       sequence_logic = balancing_logic.sequence_logic
-      @table = sequence_logic.execute
+      table = sequence_logic.execute
 
-      case result
+      status = case result
       when "late"
         interest = loan.balance + adjustments[:new_balance]
         loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -1*interest) if interest != 0
@@ -31,6 +31,8 @@ module Lms
           loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: -1*interest_adjustment) if interest_adjustment != 0
         end
       end
+
+      [table, status]
     end
   end
 end

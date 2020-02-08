@@ -4,7 +4,9 @@ class CreateLmsActualTransactions < ActiveRecord::Migration[5.0]
       t.string :kind
       t.float :amount
       t.string :note
-      t.jsonb :breakdown
+      t.float :fee_amount
+      t.float :interest_amount
+      t.float :principal_amount
       t.references :loan, index: true
 
       t.timestamps
