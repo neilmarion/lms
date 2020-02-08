@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20200201123402) do
   enable_extension "plpgsql"
 
   create_table "lms_actual_transactions", force: :cascade do |t|
-    t.string   "type"
+    t.string   "kind"
     t.float    "amount"
     t.integer  "loan_id"
     t.datetime "created_at", null: false

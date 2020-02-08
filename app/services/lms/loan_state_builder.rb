@@ -36,12 +36,11 @@ module Lms
       txns.map do |txn|
         date = case txn.class.name
                when "Lms::ExpectedTransaction"
-                 txn.date.to_s
+                { date: txn.date.to_s, amount: -1*txn.amount }
                when "Lms::ActualTransaction"
-                 txn.created_at.strftime("%Y-%m-%d")
+                { date: txn.created_at.strftime("%Y-%m-%d"), amount: txn.amount }
                end
 
-        { date: date, amount: -1*txn.amount }
       end
     end
   end
