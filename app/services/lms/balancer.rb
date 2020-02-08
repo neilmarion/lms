@@ -18,7 +18,7 @@ module Lms
       when "late"
         interest = loan.balance + adjustments[:new_balance]
         loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -1*interest) if interest != 0
-      when "early"
+      when "ontime"
         initial_repayment_dates.select{ |x| x > current_date }.each do |date|
           principal_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_PRINCIPAL, ExpectedTransaction::PRINCIPAL]).pluck(:amount).sum
           principal_adjustment = (principal_sum + adjustments[date.to_s][:pri_chg])
