@@ -8,10 +8,10 @@ module Lms
     end
 
     def execute
-      amortization_logic = LoanStateBuilder.new(loan, current_date).execute
+      sequence_logic = LoanStateBuilder.new(loan, current_date).execute
       initial_repayment_dates = loan.initial_repayment_dates
       date_of_balance = loan.date_of_balance
-      balancing_logic = BalancingLogic.new(amortization_logic, initial_repayment_dates, date_of_balance, current_date)
+      balancing_logic = BalancingLogic.new(sequence_logic, initial_repayment_dates, date_of_balance, current_date)
       adjustments, result = balancing_logic.execute
 
       case result

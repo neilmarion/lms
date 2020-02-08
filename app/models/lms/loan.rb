@@ -6,6 +6,9 @@ module Lms
     has_many :expected_transactions
     accepts_nested_attributes_for :expected_transactions
 
+    has_many :payments
+    accepts_nested_attributes_for :payments
+
     after_create :create_initial_expected_transactions
 
     def expected_payment_per_period
