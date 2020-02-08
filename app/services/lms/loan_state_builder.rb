@@ -38,7 +38,7 @@ module Lms
                when "Lms::ExpectedTransaction"
                  txn.date.to_s
                when "Lms::ActualTransaction"
-                 txn.created_at.tostrftime("%Y-%m-%d")
+                 txn.created_at.strftime("%Y-%m-%d")
                end
 
         { date: date, amount: -1*txn.amount }

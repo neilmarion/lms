@@ -16,12 +16,12 @@ module Lms
     it "creates the first expected payments after creation" do
       result = loan.expected_transactions.first
       expect(result.kind).to eq "initial_balance"
-      expect(result.amount).to eq 101502.487562189
+      expect(result.amount).to eq 50751.2437810945
       expect(result.date.to_s).to eq "2020-04-01"
 
       result = loan.expected_transactions.last
       expect(result.kind).to eq "initial_balance"
-      expect(result.amount).to eq 101502.487562189
+      expect(result.amount).to eq 50751.2437810945
       expect(result.date.to_s).to eq "2020-05-01"
     end
   end
