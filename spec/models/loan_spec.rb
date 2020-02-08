@@ -13,16 +13,21 @@ module Lms
       })
     end
 
-    it "creates the first expected payments after creation" do
-      result = loan.expected_transactions.first
-      expect(result.kind).to eq "initial_balance"
-      expect(result.amount).to eq 50751.2437810945
-      expect(result.date.to_s).to eq "2020-04-01"
+    let(:expected_result) do
+      [{"id"=>1, "kind"=>"interest", "amount"=>1000.0, "date"=>Date.parse("2020-04-01"), "loan_id"=>loan.id},
+       {"id"=>2, "kind"=>"principal", "amount"=>49751.2437810945, "date"=>Date.parse("2020-04-01"), "loan_id"=>loan.id},
+       {"id"=>3, "kind"=>"interest", "amount"=>502.487562189055, "date"=>Date.parse("2020-05-01"), "loan_id"=>loan.id},
+       {"id"=>4, "kind"=>"principal", "amount"=>50248.7562189055, "date"=>Date.parse("2020-05-01"), "loan_id"=>loan.id}]
+    end
 
-      result = loan.expected_transactions.last
-      expect(result.kind).to eq "initial_balance"
-      expect(result.amount).to eq 50751.2437810945
-      expect(result.date.to_s).to eq "2020-05-01"
+    it "creates the first expected payments after creation" do
+      result = loan.expected_transactions.as_json.map do |x|
+        x.delete("created_at")
+        x.delete("updated_at")
+        x
+      end
+
+      expect(result).to eq expected_result
     end
   end
 end

@@ -1,6 +1,7 @@
 module Lms
   class ExpectedTransaction < ApplicationRecord
-    INITIAL_BALANCE = "initial_balance"
+    PRINCIPAL = "principal"
+    INTEREST = "interest"
 
     belongs_to :loan
   end

@@ -4,9 +4,16 @@ module Lms
   describe InitialExpectedTransactionsScheduleMapper do
     let(:expected_result) {
       {
-        "2020-04-01"=>50751.24378109451,
-        "2020-05-01"=>50751.24378109451,
+        "2020-04-01" => {
+          interest: 1000.0,
+          principal: 49751.24378109451,
+        },
+        "2020-05-01" => {
+          interest: 502.4875621890549,
+          principal: 50248.75621890546,
+        },
       }
+
     }
 
     it "gives the initial expected payments given a loan" do
@@ -21,7 +28,7 @@ module Lms
       })
 
       result = described_class.new(loan).execute
-      expect(expected_result).to eq result
+      expect(result).to eq expected_result
     end
   end
 end
