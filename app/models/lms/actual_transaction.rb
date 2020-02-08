@@ -1,14 +1,16 @@
 module Lms
   class ActualTransaction < ApplicationRecord
-    after_create :balance_and_calculate_breakdown
+    after_create :balance
 
     PAYMENT = "payment"
 
     belongs_to :loan
 
-    def balance_and_calculate_breakdown
+    def balance
       balancer = Balancer.new(loan, Date.today)
       table, status = balancer.execute
+
+      loan.update_attributes(status: status)
     end
   end
 end

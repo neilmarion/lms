@@ -19,12 +19,9 @@ ActiveRecord::Schema.define(version: 20200201123402) do
     t.string   "kind"
     t.float    "amount"
     t.string   "note"
-    t.float    "fee_amount"
-    t.float    "interest_amount"
-    t.float    "principal_amount"
     t.integer  "loan_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["loan_id"], name: "index_lms_actual_transactions_on_loan_id", using: :btree
   end
 

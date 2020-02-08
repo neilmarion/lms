@@ -15,7 +15,8 @@ module Lms
     end
 
     it "includes breakdown" do
-      loan.actual_transactions.create({
+      allow(Date).to receive(:today).and_return(current_date.to_date)
+      actual_transaction = loan.actual_transactions.create({
         amount: -1*loan.expected_payment_per_period,
         created_at: current_date,
         updated_at: current_date,

@@ -30,6 +30,9 @@ module Lms
       # int_chg = interest change
       # pri_chg = principal change
       #
+      # tot_ipd = total interest paid
+      # tot_ppd = total principal paid
+      #
       # zzz_int = ending interest
       # zzz_pri = ending principal
       # zzz_bal = ending balance
@@ -50,6 +53,9 @@ module Lms
         zzz_pri = aaa_pri + pri_chg
         zzz_bal = aaa_bal + day_int + tot_chg
 
+        tot_ipd = temp[:tot_ipd].to_f + int_chg
+        tot_ppd = temp[:tot_ppd].to_f + pri_chg
+
         temp = {
           aaa_bal: aaa_bal,
           aaa_pri: aaa_pri,
@@ -58,6 +64,8 @@ module Lms
           tot_chg: tot_chg,
           int_chg: int_chg,
           pri_chg: pri_chg,
+          tot_ipd: tot_ipd,
+          tot_ppd: tot_ppd,
           zzz_int: zzz_int,
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,
