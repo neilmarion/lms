@@ -14,7 +14,7 @@ module Lms
       balancing_logic = BalancingLogic.new(sequence_logic, initial_repayment_dates, date_of_balance, current_date)
       adjustments, result = balancing_logic.execute
       sequence_logic = balancing_logic.sequence_logic
-      table = sequence_logic.execute
+      @table = sequence_logic.execute
 
       case result
       when "late"
