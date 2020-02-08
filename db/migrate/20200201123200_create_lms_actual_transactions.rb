@@ -3,6 +3,8 @@ class CreateLmsActualTransactions < ActiveRecord::Migration[5.0]
     create_table :lms_actual_transactions do |t|
       t.string :kind
       t.float :amount
+      t.string :note
+      t.jsonb :breakdown
       t.references :loan, index: true
 
       t.timestamps

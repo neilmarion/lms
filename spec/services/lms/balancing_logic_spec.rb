@@ -95,14 +95,14 @@ module Lms
       end
       let(:expected_result) do
         [
-          {:amount=>-83.61063173724688, :date=>"2020-04-06"}
+          { interest: -83.61063173724688, date: "2020-04-06" }
         ]
       end
 
       specify do
         logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date, remaining_balance)
         result = logic.execute
-        expect(expected_result).to eq result
+        expect(result).to eq expected_result
       end
     end
 

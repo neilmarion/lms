@@ -4,6 +4,7 @@ class CreateLmsExpectedTransactions < ActiveRecord::Migration[5.0]
       t.string :kind
       t.float :amount
       t.date :date
+      t.string :note
       t.references :loan, index: true
 
       t.timestamps

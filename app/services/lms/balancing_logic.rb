@@ -63,7 +63,7 @@ module Lms
     end
 
     def calculate_adjustment
-      [{ date: transaction_date, amount: amortization_logic.transactions.map{ |x| x[:amount] }.sum + remaining_balance }]
+      [{ date: transaction_date, interest: amortization_logic.transactions.map{ |x| x[:amount] }.sum + remaining_balance }]
     end
   end
 end
