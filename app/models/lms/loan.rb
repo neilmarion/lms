@@ -38,13 +38,13 @@ module Lms
     end
 
     def balance
-      expected_transactions.pluck(:amount).sum - actual_transactions.pluck(:amount).sum
+      expected_transactions.pluck(:amount).sum - -1*(actual_transactions.pluck(:amount).sum)
     end
 
     def initial_repayment_dates
       @initial_repayment_dates ||= expected_transactions.where(kind: [
         ExpectedTransaction::INIT_PRINCIPAL,
-        ExpectedTransaction::INIT_INTEREST
+        ExpectedTransaction::INIT_INTEREST,
       ]).pluck(:date).uniq
     end
 

@@ -4,19 +4,17 @@ module Lms
 
     def initialize(amortization_logic, base_payment_dates, date_of_balance, transaction_date)
       @amortization_logic = amortization_logic
-      @date_of_balance = date_of_balance
-      @base_payment_dates = base_payment_dates
-      @transaction_date = transaction_date
+      @date_of_balance = date_of_balance.to_s
+      @base_payment_dates = base_payment_dates.map(&:to_s)
+      @transaction_date = transaction_date.to_s
     end
 
     def execute
       table = amortization_logic.execute
-
-      return nil if amortization_logic.blank?
-      # NOTE: Before, this is round(2). But changed to round(0) to ignore very minute values like 0.000006
       if is_early?(table)
         [balance_after_early, "early"]
       elsif is_late?(table)
+        binding.pry
         [balance_after_late, "late"]
       end
     end
@@ -30,6 +28,7 @@ module Lms
 
     def is_late?(table)
       row = table[date_of_balance]
+      binding.pry
       row[:zzz_bal].round(0) > 0
     end
 

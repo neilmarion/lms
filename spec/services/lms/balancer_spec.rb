@@ -23,27 +23,37 @@ module Lms
       end
 
       it "creates expected transactions accordingly in order to balance" do
-
+        expected_txns_count = loan.expected_transactions.count
+        expect {
+          balancer = described_class.new(loan, "2020-04-01".to_date)
+          balancer.execute
+          expected_txns_count = loan.expected_transactions.count
+        }.not_to change{ expected_txns_count }.from 4
       end
     end
 
     context "when customer pays late but pays additional interest" do
-      let(:current_date) { "2020-04-13" }
-      before(:each) do
-        loan.actual_transactions.create({
-          amount: -1*loan.expected_payment_per_period,
-          created_at: "2020-04-12",
-          updated_at: "2020-04-12",
-        })
-      end
-
+      let(:current_date) { "2020-04-06" }
       it "creates expected transactions accordingly in order to balance" do
+        expected_txns_count = loan.expected_transactions.count
+        expect {
+          balancer = described_class.new(loan, current_date.to_date)
+          balancer.execute
+          expected_txns_count = loan.expected_transactions.count
+        }.to change{ expected_txns_count }.from 4
 
+        binding.pry
+        # NOTE: No more expected transactions must be created after balancing
+        expect {
+          balancer = described_class.new(loan, current_date.to_date)
+          balancer.execute
+          expected_txns_count = loan.expected_transactions.count
+        }.not_to change{ expected_txns_count }.from 5
       end
     end
 
     context "when customer pays early so lesser interest is paid" do
-      let(:current_date) { "2020-05-02" }
+      let(:current_date) { "2020-04-02" }
       before(:each) do
         loan.actual_transactions.create({
           amount: -1*80000,
@@ -53,7 +63,19 @@ module Lms
       end
 
       it "creates expected transactions accordingly in order to balance" do
+        expected_txns_count = loan.expected_transactions.count
+        expect {
+          balancer = described_class.new(loan, current_date.to_date)
+          balancer.execute
+          expected_txns_count = loan.expected_transactions.count
+        }.to change{ expected_txns_count }.from 4
 
+        # NOTE: No more expected transactions must be created after balancing
+        expect {
+          balancer = described_class.new(loan, current_date.to_date)
+          balancer.execute
+          expected_txns_count = loan.expected_transactions.count
+        }.not_to change{ expected_txns_count }.from 6
       end
     end
   end
