@@ -8,7 +8,9 @@ module Lms
 
     def execute
       amortization_logic = LoanStateBuilder.new(loan, Date.today)
-      adjustments = BalancingLogic.new()
+      initial_repayment_dates = loan.initial_repayment_dates
+      date_of_balance = loan.date_of_balance
+      adjustments = BalancingLogic.new(initial_repayment_dates, date_of_balance, amortization_logic)
     end
   end
 end

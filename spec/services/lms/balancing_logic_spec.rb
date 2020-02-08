@@ -93,20 +93,19 @@ module Lms
         ]
       end
       let(:expected_result) do
-        [
-          { interest: -83.61063173724688, date: "2020-04-06" }
-        ]
+        #{ interest: -83.61063173724688, date: "2020-04-06" }
+        # NOTE: remaining_balance + new_balance in order to get -83.61063173724688
+        { new_balance: -101586.09819392627 }
       end
 
       specify do
-        logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date, remaining_balance)
+        logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date)
         result = logic.execute
         expect(result).to eq expected_result
       end
     end
 
     context "customer paid early" do
-      let(:remaining_balance) { nil }
       let(:current_date) { "2020-03-20" }
       let(:transactions) do
         [
@@ -115,16 +114,15 @@ module Lms
           { date: "2020-05-01", amount: -50751.24378109451 },
         ]
       end
-      let(:expected_result) do
-        [
-          { date: "2020-04-01", amount: 9973.900031094512 },
-          { date: "2020-05-01", amount: 50751.24378109451 },
-        ]
-      end
 
       specify do
-        logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date, remaining_balance)
-        result = logic.execute
+        logic = described_class.new(amortization_logic, base_payments, date_of_balance, current_date)
+        table = logic.execute
+        # NOTE: This should be the new values of the expected repayments
+        expect(table["2020-04-01"][:pri_chg]).to eq -40625.0
+        expect(table["2020-04-01"][:int_chg]).to eq -152.34375
+        expect(table["2020-05-01"][:pri_chg]).to eq 0
+        expect(table["2020-05-01"][:int_chg]).to eq 0
       end
     end
   end
