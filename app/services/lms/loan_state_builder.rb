@@ -19,7 +19,7 @@ module Lms
     private
 
     def realized_actual_transactions
-      loan.actual_transactions.where("date < ?", current_date)
+      loan.actual_transactions.where("created_at < ?", DateTime.strptime(current_date.to_s, "%Y-%m-%d"))
     end
 
     def unrealized_expected_transactions
@@ -34,7 +34,14 @@ module Lms
 
     def transform_transactions(txns)
       txns.map do |txn|
-        { date: txn.strftime("%Y-%m-%d"), amount: -1*txn.amount }
+        date = case txn.class.name
+               when "Lms::ExpectedTransaction"
+                 txn.date.to_s
+               when "Lms::ActualTransaction"
+                 txn.created_at.tostrftime("%Y-%m-%d")
+               end
+
+        { date: date, amount: -1*txn.amount }
       end
     end
   end

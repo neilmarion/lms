@@ -21,7 +21,7 @@ module Lms
       initial_repayment_schedule.map do |date, value|
         expected_transactions.create({
           date: date,
-          amount: initial_balance,
+          amount: value,
           kind: ExpectedTransaction::INITIAL_BALANCE,
         })
       end
