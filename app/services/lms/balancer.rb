@@ -1,6 +1,6 @@
 module Lms
   class Balancer
-    attr_accessor :loan, :current_date
+    attr_accessor :loan, :current_date, :table
 
     def initialize(loan, current_date)
       @loan = loan
@@ -13,6 +13,8 @@ module Lms
       date_of_balance = loan.date_of_balance
       balancing_logic = BalancingLogic.new(sequence_logic, initial_repayment_dates, date_of_balance, current_date)
       adjustments, result = balancing_logic.execute
+      sequence_logic = balancing_logic.sequence_logic
+      table = sequence_logic.execute
 
       case result
       when "late"

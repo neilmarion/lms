@@ -1,12 +1,12 @@
 module Lms
   class ActualTransaction < ApplicationRecord
-    after_create :calculate_breakdown
+    after_create :balance_and_calculate_breakdown
 
     PAYMENT = "payment"
 
     belongs_to :loan
 
-    def calculate_breakdown
+    def balance_and_calculate_breakdown
 
     end
   end
