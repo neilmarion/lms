@@ -1,18 +1,20 @@
-<%= form_for @loan, url: loans_path, method: :post do |f| %>
-  <%= f.label :period %>
-  <%= f.text_field :period %>
-  <br>
-  <%= f.label :amount %>
-  <%= f.text_field :amount %>
-  <br>
-  <%= f.label :interest %>
-  <%= f.text_field :interest %>
-  <br>
-  <%= f.label :period_count %>
-  <%= f.text_field :period_count %>
-  <br>
-  <%= f.label :start_date %>
-  <%= f.text_field :start_date %>
-  <br>
-  <%= f.submit "create loan" %>
-<% end %>
+<div class="new-loan">
+  <%= form_for @loan, url: loans_path, method: :post do |f| %>
+    <%= f.label :period %>
+    <%= f.text_field :period, disabled: true, value: "monthly" %>
+    <br>
+    <%= f.label :amount %>
+    <%= f.number_field :amount %>
+    <br>
+    <%= f.label :interest %>
+    <%= f.text_field :interest %>
+    <br>
+    <%= f.label :period_count %>
+    <%= f.text_field :period_count %>
+    <br>
+    <%= f.label :start_date %>
+    <%= f.date_field :start_date %>
+    <br>
+    <%= f.submit "create loan" %>
+  <% end %>
+</div>
