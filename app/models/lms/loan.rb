@@ -90,27 +90,27 @@ module Lms
     end
 
     def remaining_balance
-      state[:bal_rem]
+      state[:bal_rem].round(2)
     end
 
     def remaining_principal
-      state[:pri_rem]
+      state[:pri_rem].round(2)
     end
 
     def remaining_interest
-      state[:int_rem]
+      state[:int_rem].round(2)
     end
 
     def paid_balance
-      state[:tot_bpd]
+      state[:tot_bpd].round(2)
     end
 
     def paid_interest
-      state[:tot_ipd]
+      state[:tot_ipd].round(2)
     end
 
     def paid_principal
-      state[:tot_ppd]
+      state[:tot_ppd].round(2)
     end
   end
 end
