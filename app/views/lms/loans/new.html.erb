@@ -1,7 +1,7 @@
 <div class="new-loan">
   <%= form_for @loan, url: loans_path, method: :post do |f| %>
     <%= f.label :period %>
-    <%= f.text_field :period, disabled: true, value: "monthly" %>
+    <%= f.select :period, ["monthly", "weekly"] %>
     <br>
     <%= f.label :amount %>
     <%= f.number_field :amount %>

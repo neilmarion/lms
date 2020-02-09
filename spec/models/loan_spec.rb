@@ -199,7 +199,6 @@ module Lms
 
           builder = ViewBuilder.new(loan)
           view = builder.execute
-          binding.pry
         end
       end
     end
