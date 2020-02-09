@@ -118,6 +118,10 @@ div {
   color: white;
 }
 
+.headings {
+  width: 100%
+}
+
 .headings td, .headings th {
   padding: 5px;
 }
@@ -138,4 +142,12 @@ div {
 
 .headings .ontime {
   background-color: #ecf0f1;
+}
+
+.headings .figure-label {
+  text-align: right;
+}
+
+.loan-details {
+  width: 10%;
 }

@@ -1,7 +1,12 @@
 <table class="headings">
   <tr>
+    <th class="loan-details"></th>
     <th></th>
     <th></th>
+    <th></th>
+    <th class="loan-details"></th>
+    <th class="loan-details"></th>
+    <th class="loan-details"></th>
   </tr>
   <tr>
     <td class="label">
@@ -10,13 +15,40 @@
     <td>
       <%= @loan.amount %>
     </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td class="figure-label label">
+      Interest
+    </td>
+    <td class="figure-label label">
+      Principal
+    </td>
+    <td class="figure-label label">
+      Total
+    </td>
   </tr>
   <tr>
     <td class="label">
-      Interest:
+      Interest %:
     </td>
     <td>
       <%= @loan.interest * 100 %> %
+    </td>
+    <td>
+    </td>
+    <td class="figure-label label">
+      Remaining
+    </td>
+    <td class="figure-label">
+      int rem
+    </td>
+    <td class="figure-label">
+      pri rem
+    </td>
+    <td class="figure-label">
+      <%= @loan.remaining_balance %>
     </td>
   </tr>
   <tr>
@@ -25,6 +57,21 @@
     </td>
     <td>
       <%= @loan.period_count %>
+    </td>
+    <td></td>
+    <td class="figure-label label">Paid</td>
+    <td class="figure-label">int paid</td>
+    <td class="figure-label">pri paid</td>
+    <td class="figure-label">
+      pd bal
+    </td>
+  </tr>
+  <tr>
+    <td class="label">
+      Start Date
+    </td>
+    <td>
+      <%= @loan.start_date.strftime("%Y-%m-%d") %>
     </td>
   </tr>
   <tr>
