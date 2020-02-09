@@ -1,3 +1,44 @@
+<table class="headings">
+  <tr>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr>
+    <td class="label">
+      Amount:
+    </td>
+    <td>
+      <%= @loan.amount %>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">
+      Interest:
+    </td>
+    <td>
+      <%= @loan.interest * 100 %> %
+    </td>
+  </tr>
+  <tr>
+    <td class="label">
+      Periods:
+    </td>
+    <td>
+      <%= @loan.period_count %>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">
+      Status:
+    </td>
+    <td class="ontime">
+      <%= @loan.status %>
+    </td>
+  </tr>
+</table>
+
+<br><br><br>
+
 <table class="loan">
   <tr>
     <th class="date">Date</th>

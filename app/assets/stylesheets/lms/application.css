@@ -117,3 +117,25 @@ div {
   background-color: #4CAF50;
   color: white;
 }
+
+.headings td, .headings th {
+  padding: 5px;
+}
+
+.headings .label {
+  color: #7f8c8d;
+}
+
+.headings .early {
+  background-color: #27ae60;
+  color: #fff;
+}
+
+.headings .late {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.headings .ontime {
+  background-color: #ecf0f1;
+}
