@@ -35,7 +35,7 @@ module Lms
     def balance_after_early
       loop.inject([]) do |adjustment_transactions|
         table = sequence_logic.execute
-        return table if table[date_of_balance][:zzz_bal].round(2) == 0
+        return adjustment_transactions if table[date_of_balance][:zzz_bal].round(2) == 0
 
         table.each do |date, row|
           if (base_payment_dates.include? date) && (row[:zzz_bal].round(2) < 0)

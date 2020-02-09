@@ -21,24 +21,17 @@ module Lms
         interest = loan.expected_transactions_sum + adjustments[:new_balance]
         loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -1*interest, note: "Late payment - #{current_date}") if interest.round(2) != 0
       when Loan::EARLY
-        total_principal_adjustment = 0
-
-        # NOTE: Need to change this
         initial_repayment_dates.select{ |x| x >= current_date }.each do |date|
+          amount = adjustments.select{ |x| x[:date] == date }.map{ |x| x[:amount] }.sum
           principal_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_PRINCIPAL, ExpectedTransaction::PRINCIPAL]).pluck(:amount).sum
-          principal_adjustment = (principal_sum + adjustments[date.to_s][:pri_chg])
-          total_principal_adjustment = total_principal_adjustment + principal_adjustment
-          loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: date, amount: -1*principal_adjustment, note: "pri Early payment adj - #{current_date}") if principal_adjustment != 0
-
           interest_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_INTEREST, ExpectedTransaction::INTEREST]).pluck(:amount).sum
-          interest_adjustment = (interest_sum + adjustments[date.to_s][:int_chg])
-          loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: -1*interest_adjustment, note: "int Early payment adj - #{current_date}") if interest_adjustment != 0
+
+          loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: -1*interest_sum, note: "int Early payment adj - #{current_date}")
+          loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: date, amount: -1*principal_sum, note: "pri Early payment adj - #{current_date}")
+          loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: current_date, amount: principal_sum, note: "pri Early payment adj - #{current_date}")
         end
 
-        loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: current_date, amount: total_principal_adjustment, note: "pri Early payment adj - #{current_date}") if total_principal_adjustment != 0
-        if adjustments[current_date.to_s][:zzz_pri].round(2) == 0 && !initial_repayment_dates.include?(current_date)
-          loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -adjustments[current_date.to_s][:int_chg], note: "int Early payment adj - #{current_date}")
-        end
+        loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -table[current_date.to_s][:int_chg], note: "pri Early payment adj - #{current_date}")
       end
 
       [table, result]
