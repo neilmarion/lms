@@ -15,6 +15,13 @@ module Lms
     ONTIME = "ontime"
     LATE = "late"
 
+    def do_balance
+      balancer = Balancer.new(self, Date.today)
+      table, status = balancer.execute
+
+      loan.update_attributes(status: status)
+    end
+
     def expected_payment_per_period
       @payment_per_period ||= AmortizationCalculator.payment_per_period({
         amount: amount,

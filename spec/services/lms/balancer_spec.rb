@@ -3,11 +3,11 @@ require "rails_helper"
 module Lms
   describe Balancer do
     before do
-      ActualTransaction.skip_callback(:create, :after, :balance)
+      ActualTransaction.skip_callback(:create, :after, :do_balance)
     end
 
     after do
-      ActualTransaction.set_callback(:create, :after, :balance)
+      ActualTransaction.set_callback(:create, :after, :do_balance)
     end
 
     let(:start_date) { "2020-03-01" }
