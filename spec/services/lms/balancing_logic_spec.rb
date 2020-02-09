@@ -101,7 +101,7 @@ module Lms
       specify do
         logic = described_class.new(sequence_logic, base_payments.keys, date_of_balance, current_date)
         result, state = logic.execute
-        expect(state).to eq "late"
+        expect(state).to eq Loan::LATE
         expect(result).to eq expected_result
       end
     end
@@ -119,7 +119,7 @@ module Lms
       specify do
         logic = described_class.new(sequence_logic, base_payments.keys, date_of_balance, current_date)
         table, state = logic.execute
-        expect(state).to eq "ontime"
+        expect(state).to eq Loan::ONTIME
         # NOTE: This should be the new values of the expected repayments
         expect(table["2020-04-01"][:pri_chg]).to eq -40625.0
         expect(table["2020-04-01"][:int_chg]).to eq -152.34375

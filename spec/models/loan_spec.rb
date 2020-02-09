@@ -36,7 +36,12 @@ module Lms
       context "when loan is paid on time" do
         specify do
           allow(Date).to receive(:today).and_return("2020-03-01".to_date)
-          binding.pry
+          expect(loan.remaining_balance).to eq 101502.48756218905
+          expect(loan.remaining_interest).to eq 1502.487562189055
+          expect(loan.remaining_principal).to eq 100000.00
+          expect(loan.paid_balance).to eq 0.0
+          expect(loan.paid_interest).to eq 0.0
+          expect(loan.paid_principal).to eq 0.0
         end
       end
     end

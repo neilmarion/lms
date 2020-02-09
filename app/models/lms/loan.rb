@@ -11,6 +11,10 @@ module Lms
 
     after_create :create_initial_expected_transactions
 
+    # Loan statuses
+    ONTIME = "ontime"
+    LATE = "late"
+
     def expected_payment_per_period
       @payment_per_period ||= AmortizationCalculator.payment_per_period({
         amount: amount,

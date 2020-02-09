@@ -12,9 +12,9 @@ module Lms
     def execute
       table = sequence_logic.execute
       if is_ontime?(table)
-        [balance_after_ontime, "ontime"]
+        [balance_after_ontime, Loan::ONTIME]
       elsif is_late?(table)
-        [balance_after_late, "late"]
+        [balance_after_late, Loan::LATE]
       end
     end
 
