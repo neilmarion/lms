@@ -33,7 +33,7 @@ module Lms
 
         arr << { date: date.to_s, charges: init_txns.pluck(:amount).sum.round(2).to_s, txns: txns.sort_by{ |x| x[:date] } }
         arr
-      end
+      end.sort_by{|x| x[:date]}
     end
 
     def transform_txns(txns)
