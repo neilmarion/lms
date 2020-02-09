@@ -35,7 +35,7 @@ module Lms
         end
 
         loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: current_date, amount: total_principal_adjustment, note: "pri Early payment adj - #{current_date}") if total_principal_adjustment != 0
-        loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: adjustments[current_date.to_s][:int_chg], note: "int Early payment adj - #{current_date}") if adjustments[current_date.to_s][:zzz_pri].round(0) == 0
+        loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -adjustments[current_date.to_s][:int_chg], note: "int Early payment adj - #{current_date}") if adjustments[current_date.to_s][:zzz_pri].round(0) == 0
       end
 
       [table, result]
