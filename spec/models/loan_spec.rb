@@ -36,6 +36,7 @@ module Lms
       context "when loan is paid on time" do
         specify do
           allow(Date).to receive(:today).and_return("2020-03-01".to_date)
+          binding.pry
         end
       end
     end

@@ -81,5 +81,25 @@ module Lms
     def remaining_balance
       state[:bal_rem]
     end
+
+    def remaining_principal
+      state[:pri_rem]
+    end
+
+    def remaining_interest
+      state[:int_rem]
+    end
+
+    def paid_balance
+      state[:tot_bpd]
+    end
+
+    def paid_interest
+      state[:tot_ipd]
+    end
+
+    def paid_principal
+      state[:tot_ppd]
+    end
   end
 end

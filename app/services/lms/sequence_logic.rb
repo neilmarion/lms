@@ -65,6 +65,7 @@ module Lms
 
         tot_ipd = temp[:tot_ipd].to_f + int_chg
         tot_ppd = temp[:tot_ppd].to_f + pri_chg
+        tot_bpd = temp[:tot_bpd].to_f + tot_ipd + tot_ppd
 
         temp = {
           aaa_bal: aaa_bal,
@@ -76,6 +77,7 @@ module Lms
           pri_chg: pri_chg,
           tot_ipd: tot_ipd,
           tot_ppd: tot_ppd,
+          tot_bpd: tot_bpd,
           bal_rem: bal_rem,
           int_rem: int_rem,
           pri_rem: pri_rem,
