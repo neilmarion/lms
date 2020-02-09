@@ -42,6 +42,7 @@ module Lms
           expect(loan.paid_balance).to eq 0.0
           expect(loan.paid_interest).to eq 0.0
           expect(loan.paid_principal).to eq 0.0
+          expect(loan.status).to eq Loan::ONTIME
         end
       end
     end
