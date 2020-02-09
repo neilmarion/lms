@@ -31,7 +31,8 @@ module Lms
         actual_txns = transform_txns(loan.actual_transactions.where(created_at: date_range))
         txns = expected_txns + actual_txns
 
-        arr << { date: date.to_s, charges: init_txns.pluck(:amount).sum.round(2).to_s, txns: txns.sort_by{ |x| x[:date] } }
+        charges = txns.map{|x| x[:charges].to_f }.sum
+        arr << { date: date.to_s, charges: charges + init_txns.pluck(:amount).sum.round(2), txns: txns.sort_by{ |x| x[:date] } }
         arr
       end.sort_by{|x| x[:date]}
     end
@@ -40,9 +41,9 @@ module Lms
       txns.map do |txn|
         date = case txn.class.name
                when "Lms::ExpectedTransaction"
-                 { date: txn.date.to_s, charges: transform_amt(txn.amount), credits: nil, note: txn.note }
+                 { date: txn.date.to_s, charges: txn.amount, credits: nil, note: txn.note }
                when "Lms::ActualTransaction"
-                 { date: txn.created_at.strftime("%Y-%m-%d"), charges: nil, credits: transform_amt(txn.amount), note: txn.note, kind: txn.kind }
+                 { date: txn.created_at.strftime("%Y-%m-%d"), charges: nil, credits: txn.amount, note: txn.note, kind: txn.kind }
                end
       end
     end

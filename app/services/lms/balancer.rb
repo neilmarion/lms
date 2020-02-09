@@ -23,6 +23,7 @@ module Lms
       when Loan::EARLY
         total_principal_adjustment = 0
 
+        # NOTE: Need to change this
         initial_repayment_dates.select{ |x| x >= current_date }.each do |date|
           principal_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_PRINCIPAL, ExpectedTransaction::PRINCIPAL]).pluck(:amount).sum
           principal_adjustment = (principal_sum + adjustments[date.to_s][:pri_chg])
@@ -35,7 +36,7 @@ module Lms
         end
 
         loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: current_date, amount: total_principal_adjustment, note: "pri Early payment adj - #{current_date}") if total_principal_adjustment != 0
-        if adjustments[current_date.to_s][:zzz_pri].round(0) == 0 && !initial_repayment_dates.include?(current_date)
+        if adjustments[current_date.to_s][:zzz_pri].round(2) == 0 && !initial_repayment_dates.include?(current_date)
           loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -adjustments[current_date.to_s][:int_chg], note: "int Early payment adj - #{current_date}")
         end
       end
