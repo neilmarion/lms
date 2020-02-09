@@ -16,11 +16,11 @@ module Lms
       sequence_logic = balancing_logic.sequence_logic
       table = sequence_logic.execute
 
-      status = case result
+      case result
       when Loan::LATE
         interest = loan.remaining_balance + adjustments[:new_balance]
         loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -1*interest) if interest.round(2) != 0
-      when Loan::ONTIME
+      when Loan::EARLY
         initial_repayment_dates.select{ |x| x >= current_date }.each do |date|
           interest_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_INTEREST, ExpectedTransaction::INTEREST]).pluck(:amount).sum
           interest_adjustment = (interest_sum + adjustments[date.to_s][:int_chg])
@@ -28,7 +28,7 @@ module Lms
         end
       end
 
-      [table, status]
+      [table, result]
     end
   end
 end

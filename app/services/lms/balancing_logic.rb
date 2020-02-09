@@ -11,18 +11,20 @@ module Lms
 
     def execute
       table = sequence_logic.execute
-      if is_ontime?(table)
-        [balance_after_ontime, Loan::ONTIME]
+      if is_early?(table)
+        [balance_after_early, Loan::EARLY]
       elsif is_late?(table)
         [balance_after_late, Loan::LATE]
+      else
+        [nil, Loan::ONTIME]
       end
     end
 
     private
 
-    def is_ontime?(table)
+    def is_early?(table)
       row = table[date_of_balance]
-      row[:zzz_bal].round(0) <= 0
+      row[:zzz_bal].round(0) < 0
     end
 
     def is_late?(table)
@@ -30,7 +32,7 @@ module Lms
       row[:zzz_bal].round(0) > 0
     end
 
-    def balance_after_ontime
+    def balance_after_early
       loop.inject([]) do |adjustment_transactions|
         table = sequence_logic.execute
         return table if table[date_of_balance][:zzz_bal].round(2) == 0
@@ -40,6 +42,10 @@ module Lms
             adjustment_transactions << { date: date, amount: row[:zzz_bal]*-1 }
             sequence_logic.add_transaction(adjustment_transactions.last)
             break
+          elsif (base_payment_dates.include? date) && (row[:zzz_bal].round(0) == 0)
+            # NOTE: Monkey patch because there is a possibility that table[date_of_balance][:zzz_bal].round(2) is 0.01
+            adjustment_transactions << { date: date, amount: row[:zzz_bal]*-1 }
+            sequence_logic.add_transaction(adjustment_transactions.last)
           end
         end
 

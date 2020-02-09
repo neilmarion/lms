@@ -113,7 +113,7 @@ module Lms
     end
 
     def transaction_amount_sum(date)
-      amounts = transactions.select{ |x| x[:date] == date }.map{ |x| x[:amount] }.sum
+      amounts = transactions.select{ |x| x[:date] == date }.map{ |x| x[:amount].to_f }.sum
     end
   end
 end

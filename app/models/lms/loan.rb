@@ -12,14 +12,15 @@ module Lms
     after_create :create_initial_expected_transactions
 
     # Loan statuses
-    ONTIME = "ontime"
+    EARLY = "early"
     LATE = "late"
+    ONTIME = "ontime"
 
     def do_balance
       balancer = Balancer.new(self, Date.today)
       table, status = balancer.execute
 
-      loan.update_attributes(status: status)
+      update_attributes(status: status)
     end
 
     def expected_payment_per_period
@@ -85,12 +86,18 @@ module Lms
       table[current_date.to_s]
     end
 
+    def table
+      sequence_logic = Lms::LoanStateBuilder.new(self, current_date).execute
+      table = sequence_logic.execute
+      table
+    end
+
     def current_date
       Date.today
     end
 
     def remaining_balance
-      state[:bal_rem].round(2)
+      (expected_transactions.pluck(:amount).sum + actual_transactions.pluck(:amount).sum).round(2)
     end
 
     def remaining_principal

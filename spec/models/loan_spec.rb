@@ -127,5 +127,77 @@ module Lms
         end
       end
     end
+
+    describe "scenarios" do
+      context "when loan is paid late" do
+        specify do
+          current_date = "2020-03-01"
+          allow(Date).to receive(:today).and_return(current_date.to_date)
+          expect(loan.remaining_balance).to eq 101502.49
+          expect(loan.remaining_interest).to eq 1502.49
+          expect(loan.remaining_principal).to eq 100000.00
+          expect(loan.paid_balance).to eq 0.0
+          expect(loan.paid_interest).to eq 0.0
+          expect(loan.paid_principal).to eq 0.0
+          expect(loan.status).to eq Loan::ONTIME
+
+          # Customer does not pay on 2020-04-01
+          current_date = "2020-04-01"
+          allow(Date).to receive(:today).and_return(current_date.to_date)
+          loan.do_balance
+          current_date = "2020-04-02"
+          allow(Date).to receive(:today).and_return(current_date.to_date)
+          loan.do_balance
+          expect(loan.remaining_balance).to eq 101519.23
+          expect(loan.remaining_interest).to eq 1519.23
+          expect(loan.remaining_principal).to eq 100000
+          expect(loan.paid_balance).to eq 0
+          expect(loan.paid_interest).to eq 0
+          expect(loan.paid_principal).to eq 0
+          expect(loan.status).to eq Loan::LATE
+
+          current_date = "2020-04-03"
+          allow(Date).to receive(:today).and_return(current_date.to_date)
+          loan.do_balance
+          expect(loan.remaining_balance).to eq 101535.96
+          expect(loan.remaining_interest).to eq 1535.96
+          expect(loan.remaining_principal).to eq 100000
+          expect(loan.paid_balance).to eq 0
+          expect(loan.paid_interest).to eq 0
+          expect(loan.paid_principal).to eq 0
+          expect(loan.status).to eq Loan::LATE
+
+          actual_transaction = loan.actual_transactions.create({
+            amount: -1*(loan.expected_payment_per_period + loan.expected_transactions.where(kind: "interest").pluck(:amount).sum),
+            created_at: current_date,
+            updated_at: current_date,
+          })
+
+          expect(loan.remaining_balance).to eq 50751.24
+          expect(loan.remaining_interest).to eq 469.3 #wrong
+          expect(loan.remaining_principal).to eq 50281.95
+          expect(loan.paid_balance).to eq -50784.72
+          expect(loan.paid_interest).to eq -1066.67
+          expect(loan.paid_principal).to eq -49718.05
+          expect(loan.reload.status).to eq Loan::ONTIME
+
+          current_date = "2020-05-01"
+          allow(Date).to receive(:today).and_return(current_date.to_date)
+          actual_transaction = loan.actual_transactions.create({
+            amount: -1*(loan.expected_payment_per_period),
+            created_at: current_date,
+            updated_at: current_date,
+          })
+
+          expect(loan.remaining_balance).to eq 0.0
+          expect(loan.remaining_interest).to eq 0.0
+          expect(loan.remaining_principal).to eq 0.0
+          expect(loan.paid_balance).to eq -101535.96
+          expect(loan.paid_interest).to eq -1535.96
+          expect(loan.paid_principal).to eq -100000.0
+          expect(loan.reload.status).to eq Loan::ONTIME
+        end
+      end
+    end
   end
 end
