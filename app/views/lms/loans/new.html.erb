@@ -1,7 +1,6 @@
 <%= form_for @loan, url: loans_path, method: :post do |f| %>
   <%= f.label :period %>
   <%= f.text_field :period %>
-  <%= "for now put 'monthly'. This implementation can be extended further to support 'daily', 'weekly', 'quarterly', etc." %>
   <br>
   <%= f.label :amount %>
   <%= f.text_field :amount %>
