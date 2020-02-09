@@ -120,5 +120,9 @@ module Lms
     def paid_principal
       state[:tot_ppd].round(2)
     end
+
+    def payment_to_balance_now
+      state[:zzz_bal].round(2)
+    end
   end
 end

@@ -93,6 +93,24 @@
     <td>
     </td>
     <td class="figure-label label">
+      Pay to balance
+    </td>
+    <td class="figure-label">
+      <%= number_with_precision(@loan.payment_to_balance_now, precision: 2, delimiter: ',') %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td class="figure-label label">
       Date now
     </td>
     <td class="figure-label">
@@ -129,20 +147,6 @@
     <th>Note</th>
   </tr>
   <% @view.each do |period| %>
-    <tr class="due-date">
-      <td>
-        <%= period[:date] %>
-      </td>
-      <td>
-      </td>
-      <td>
-        <%= number_with_precision(period[:charges], precision: 2, delimiter: ',') %>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-    </tr>
     <% period[:txns].each do |txn| %>
       <tr>
         <td>
@@ -161,6 +165,20 @@
         </td>
       </tr>
     <% end %>
+    <tr class="due-date">
+      <td>
+        <%= period[:date] %>
+      </td>
+      <td>
+      </td>
+      <td>
+        <%= number_with_precision(period[:charges], precision: 2, delimiter: ',') %>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
   <% end%>
 
 </table>

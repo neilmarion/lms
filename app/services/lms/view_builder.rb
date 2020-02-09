@@ -42,7 +42,7 @@ module Lms
                when "Lms::ExpectedTransaction"
                  { date: txn.date.to_s, charges: transform_amt(txn.amount), credits: nil, note: txn.note }
                when "Lms::ActualTransaction"
-                 { date: txn.created_at.strftime("%Y-%m-%d"), charges: nil, credits: transform_amt(txn.amount), note: txn.note }
+                 { date: txn.created_at.strftime("%Y-%m-%d"), charges: nil, credits: transform_amt(txn.amount), note: txn.note, kind: txn.kind }
                end
       end
     end

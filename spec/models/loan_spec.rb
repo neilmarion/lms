@@ -101,8 +101,8 @@ module Lms
             created_at: current_date,
             updated_at: current_date,
           })
-          expect(loan.remaining_balance).to eq 31502.49
-          expect(loan.remaining_interest).to eq 502.49
+          expect(loan.remaining_balance).to eq 31310.0
+          expect(loan.remaining_interest).to eq 310.0
           expect(loan.remaining_principal).to eq 31000.0
           expect(loan.paid_balance).to eq -70000.0
           expect(loan.paid_interest).to eq -1000.00
@@ -121,8 +121,8 @@ module Lms
             created_at: current_date,
             updated_at: current_date,
           })
-          expect(loan.remaining_balance).to eq 192.49 # this is wrong because of the missing "everyday balancing"
-          expect(loan.remaining_interest).to eq 192.49 # this is wrong because of the missing "everyday balancing"
+          expect(loan.remaining_balance).to eq 0.0
+          expect(loan.remaining_interest).to eq 0.0
           expect(loan.remaining_principal).to eq 0.0
           expect(loan.paid_balance).to eq -101310.0
           expect(loan.paid_interest).to eq -1310.0
