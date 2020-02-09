@@ -40,9 +40,9 @@ module Lms
       txns.map do |txn|
         date = case txn.class.name
                when "Lms::ExpectedTransaction"
-                { date: txn.date.to_s, charge: transform_amt(txn.amount), credit: nil }
+                { date: txn.date.to_s, charges: transform_amt(txn.amount), credits: nil }
                when "Lms::ActualTransaction"
-                { date: txn.created_at.strftime("%Y-%m-%d"), charge: nil, credit: transform_amt(txn.amount) }
+                { date: txn.created_at.strftime("%Y-%m-%d"), charges: nil, credits: transform_amt(txn.amount) }
                end
       end
     end

@@ -151,3 +151,8 @@ div {
 .loan-details {
   width: 10%;
 }
+
+.controls {
+  width: 20%;
+  text-align: right;
+}

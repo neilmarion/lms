@@ -83,7 +83,7 @@
     <td class="label">
       Status:
     </td>
-    <td class="ontime">
+    <td class="<%= @loan.status %>">
       <%= @loan.status %>
     </td>
     <td>
@@ -118,8 +118,6 @@
   </tr>
 </table>
 
-
-
 <br><br><br>
 
 <table class="loan">
@@ -142,6 +140,35 @@
       <td>
       </td>
     </tr>
+    <% period[:txns].each do |txn| %>
+      <tr>
+        <td>
+          <%= txn[:date] %>
+        </td>
+        <td>
+          <%= number_with_precision(txn[:charges], precision: 2, delimiter: ',') %>
+        </td>
+        <td>
+          <%= number_with_precision(txn[:credits], precision: 2, delimiter: ',') %>
+        </td>
+        <td>
+        </td>
+      </tr>
+    <% end %>
   <% end%>
 
 </table>
+
+<br><br><br>
+
+<div class="controls">
+  <%= form_for @loan do |f| %>
+    <%= f.fields_for :actual_transactions, @loan.actual_transactions.new do |f| %>
+      <%= f.select :kind, ["payment", "waive"] %>
+      <%= f.number_field :amount %>
+      <%= f.hidden_field :created_at, value: @loan.date_today %>
+      <%= f.hidden_field :updated_at, value: @loan.date_today %>
+    <% end %>
+    <%= f.submit "Confirm" %>
+  <% end %>
+</div>

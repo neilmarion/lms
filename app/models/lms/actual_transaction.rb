@@ -3,6 +3,7 @@ module Lms
     after_create :do_balance
 
     PAYMENT = "payment"
+    WAIVE = "waive"
 
     belongs_to :loan
 
