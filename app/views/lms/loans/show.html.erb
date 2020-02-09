@@ -95,7 +95,7 @@
     <td class="figure-label label">
       Date now
     </td>
-    <td>
+    <td class="figure-label">
       <%= @loan.date_today %>
     </td>
   </tr>
@@ -123,14 +123,17 @@
 <table class="loan">
   <tr>
     <th class="date">Date</th>
+    <th></th>
     <th>Charges</th>
     <th>Debit</th>
     <th>Note</th>
   </tr>
   <% @view.each do |period| %>
-    <tr>
+    <tr class="due-date">
       <td>
         <%= period[:date] %>
+      </td>
+      <td>
       </td>
       <td>
         <%= number_with_precision(period[:charges], precision: 2, delimiter: ',') %>
@@ -143,6 +146,8 @@
     <% period[:txns].each do |txn| %>
       <tr>
         <td>
+        </td>
+        <td class="date">
           <%= txn[:date] %>
         </td>
         <td>
@@ -152,6 +157,7 @@
           <%= number_with_precision(txn[:credits], precision: 2, delimiter: ',') %>
         </td>
         <td>
+          <%= txn[:note] %>
         </td>
       </tr>
     <% end %>
@@ -165,7 +171,8 @@
   <%= form_for @loan do |f| %>
     <%= f.fields_for :actual_transactions, @loan.actual_transactions.new do |f| %>
       <%= f.select :kind, ["payment", "waive"] %>
-      <%= f.number_field :amount %>
+      <%= f.text_field :amount %>
+      <%= f.hidden_field :note, value: @loan.date_today %>
       <%= f.hidden_field :created_at, value: @loan.date_today %>
       <%= f.hidden_field :updated_at, value: @loan.date_today %>
     <% end %>

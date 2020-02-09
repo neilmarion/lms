@@ -106,9 +106,9 @@ div {
   padding: 8px;
 }
 
-.loan tr:nth-child(even){background-color: #f2f2f2;}
-
 .loan tr:hover {background-color: #ddd;}
+
+.loan tr.due-date {background-color: #ecf0f1}
 
 .loan th {
   padding-top: 12px;
@@ -149,7 +149,7 @@ div {
 }
 
 .loan-details {
-  width: 10%;
+  width: 13%;
 }
 
 .controls {

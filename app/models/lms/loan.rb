@@ -17,7 +17,7 @@ module Lms
     ONTIME = "ontime"
 
     def do_balance
-      balancer = Balancer.new(self, Date.today)
+      balancer = Balancer.new(self, self.date_today || Date.today)
       table, status = balancer.execute
 
       update_attributes(status: status)
