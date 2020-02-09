@@ -31,5 +31,13 @@ module Lms
 
       expect(result).to eq expected_result
     end
+
+    describe "scenarios" do
+      context "when loan is paid on time" do
+        specify do
+          allow(Date).to receive(:today).and_return("2020-03-01".to_date)
+        end
+      end
+    end
   end
 end

@@ -18,7 +18,7 @@ module Lms
 
       status = case result
       when "late"
-        interest = loan.balance + adjustments[:new_balance]
+        interest = loan.remaining_balance + adjustments[:new_balance]
         loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -1*interest) if interest != 0
       when "ontime"
         initial_repayment_dates.select{ |x| x > current_date }.each do |date|

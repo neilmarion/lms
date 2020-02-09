@@ -14,7 +14,13 @@ module Lms
         arr
       end
 
-      service = SequenceLogic.new(loan.amount, daily_interest_map, txns, loan.expected_transactions_sum)
+      expected_transactions_sums = {
+        bal: loan.expected_transactions_sum,
+        int: loan.expected_interest_transactions_sum,
+        pri: loan.expected_principal_transactions_sum,
+      }
+
+      service = SequenceLogic.new(loan.amount, daily_interest_map, txns, expected_transactions_sums)
       table = service.execute
 
       period_due_date = loan.start_date.next_month

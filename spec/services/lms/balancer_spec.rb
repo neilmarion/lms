@@ -43,6 +43,7 @@ module Lms
     context "when customer pays late but pays additional interest" do
       let(:current_date) { "2020-04-02" }
       it "creates expected transactions accordingly in order to balance" do
+        allow(Date).to receive(:today).and_return(current_date.to_date)
         expected_txns_count = loan.expected_transactions.count
         expect {
           balancer = described_class.new(loan, current_date.to_date)
@@ -93,6 +94,7 @@ module Lms
       end
 
       it "creates expected transactions accordingly in order to balance" do
+        allow(Date).to receive(:today).and_return(current_date.to_date)
         expected_txns_count = loan.expected_transactions.count
         expect {
           balancer = described_class.new(loan, current_date.to_date)

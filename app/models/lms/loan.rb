@@ -40,10 +40,6 @@ module Lms
       @initial_balance ||= expected_payment_per_period * period_count
     end
 
-    def balance
-      expected_transactions.pluck(:amount).sum - -1*(actual_transactions.pluck(:amount).sum)
-    end
-
     def initial_repayment_dates
       @initial_repayment_dates ||= expected_transactions.where(kind: [
         ExpectedTransaction::INIT_PRINCIPAL,
@@ -58,6 +54,32 @@ module Lms
 
     def expected_transactions_sum
       expected_transactions.pluck(:amount).sum
+    end
+
+    def expected_interest_transactions_sum
+      expected_transactions.
+        where(kind: [ExpectedTransaction::INIT_INTEREST, ExpectedTransaction::INTEREST]).
+        pluck(:amount).sum
+    end
+
+    def expected_principal_transactions_sum
+      expected_transactions.
+        where(kind: [ExpectedTransaction::INIT_PRINCIPAL, ExpectedTransaction::PRINCIPAL]).
+        pluck(:amount).sum
+    end
+
+    def state
+      sequence_logic = Lms::LoanStateBuilder.new(self, current_date, LoanStateBuilder::FOR_CURRENT_STATE).execute
+      table = sequence_logic.execute
+      table[current_date.to_s]
+    end
+
+    def current_date
+      Date.today
+    end
+
+    def remaining_balance
+      state[:bal_rem]
     end
   end
 end
