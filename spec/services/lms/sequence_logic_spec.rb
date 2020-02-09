@@ -88,7 +88,7 @@ module Lms
     let(:selected_date) { "2020-04-01" }
 
     it "returns payment per period" do
-      logic = described_class.new(100000, daily_interest_map, [])
+      logic = described_class.new(100000, daily_interest_map, [], 101502.487562189)
       result = logic.execute
       expect(result[selected_date]).to eq expected_result[selected_date]
     end

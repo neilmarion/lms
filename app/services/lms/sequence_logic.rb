@@ -1,11 +1,12 @@
 module Lms
   class SequenceLogic
-    attr_accessor :amount, :daily_interest_map, :transactions
+    attr_accessor :amount, :daily_interest_map, :transactions, :tot_bal
 
-    def initialize(amount, daily_interest_map, transactions)
+    def initialize(amount, daily_interest_map, transactions, tot_bal)
       @amount = amount
       @daily_interest_map = daily_interest_map
       @transactions = transactions
+      @tot_bal = tot_bal
     end
 
     def execute
@@ -32,12 +33,13 @@ module Lms
       #
       # tot_ipd = total interest paid
       # tot_ppd = total principal paid
+      # tot_bal = total balance remaining (after computation of all interests). This decreases while payment being made
       #
       # zzz_int = ending interest
       # zzz_pri = ending principal
       # zzz_bal = ending balance
 
-      temp = {zzz_bal: amount.to_f, zzz_pri: amount.to_f}
+      temp = {zzz_bal: amount.to_f, zzz_pri: amount.to_f, tot_bal: tot_bal}
       daily_interest_map.inject({}) do |table, (date, int)|
         aaa_bal = temp[:zzz_bal]
         aaa_pri = temp[:zzz_pri]
@@ -66,6 +68,7 @@ module Lms
           pri_chg: pri_chg,
           tot_ipd: tot_ipd,
           tot_ppd: tot_ppd,
+          tot_bal: tot_bal,
           zzz_int: zzz_int,
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,

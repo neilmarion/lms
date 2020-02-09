@@ -16,7 +16,7 @@ module Lms
       expected_txns = transform_transactions(unrealized_expected_transactions)
       txns = actual_txns + expected_txns
 
-      Lms::SequenceLogic.new(loan.amount, daily_interest_map, txns)
+      Lms::SequenceLogic.new(loan.amount, daily_interest_map, txns, loan.expected_transactions_sum)
     end
 
     private

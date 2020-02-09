@@ -55,5 +55,9 @@ module Lms
     def date_of_balance
       initial_repayment_dates.sort.last
     end
+
+    def expected_transactions_sum
+      expected_transactions.pluck(:amount).sum
+    end
   end
 end
