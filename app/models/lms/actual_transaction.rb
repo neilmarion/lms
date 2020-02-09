@@ -7,7 +7,7 @@ module Lms
     belongs_to :loan
 
     def do_balance
-      balancer = Balancer.new(loan, Date.today)
+      balancer = Balancer.new(loan, loan.date_today || Date.today)
       table, status = balancer.execute
 
       loan.update_attributes(status: status)

@@ -93,7 +93,7 @@ module Lms
     end
 
     def current_date
-      Date.today
+      self.date_today || Date.today
     end
 
     def remaining_balance

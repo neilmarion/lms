@@ -196,9 +196,6 @@ module Lms
           expect(loan.paid_interest).to eq -1535.96
           expect(loan.paid_principal).to eq -100000.0
           expect(loan.reload.status).to eq Loan::ONTIME
-
-          builder = ViewBuilder.new(loan)
-          view = builder.execute
         end
       end
     end

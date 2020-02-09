@@ -1,3 +1,7 @@
 Lms::Engine.routes.draw do
-  resources :loans
+  resources :loans do
+    member do
+      get :change_date
+    end
+  end
 end
