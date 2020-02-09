@@ -7,7 +7,52 @@ module Lms
     end
 
     def execute
+      build_view
+    end
 
+    private
+
+    def get_actual_txns
+      loan.actual_transactions.inject([]) do |arr, txn|
+        arr << { date: date, charges: nil, credits: txn.amount, balance: nil, note: nil }
+      end
+    end
+
+    def build_view
+      loan.initial_repayment_dates.inject([]) do |arr, date|
+        init_txns = loan.expected_transactions.
+          where(date: date, kind: [
+            ExpectedTransaction::INIT_PRINCIPAL,
+            ExpectedTransaction::INIT_INTEREST,
+        ])
+
+        date_range = (date.last_month+1.day)...(date+1.day)
+        expected_txns = transform_txns(loan.expected_transactions.where(kind: [ExpectedTransaction::INTEREST, ExpectedTransaction::PRINCIPAL], date: date_range))
+        actual_txns = transform_txns(loan.actual_transactions.where(created_at: date_range))
+        txns = expected_txns + actual_txns
+
+        arr << { date: date.to_s, charges: init_txns.pluck(:amount).sum.to_s, txns: txns.sort_by{ |x| x[:date] } }
+        arr
+      end
+    end
+
+    def transform_txns(txns)
+      txns.map do |txn|
+        date = case txn.class.name
+               when "Lms::ExpectedTransaction"
+                { date: txn.date.to_s, charge: transform_amt(txn.amount), credit: nil }
+               when "Lms::ActualTransaction"
+                { date: txn.created_at.strftime("%Y-%m-%d"), charge: nil, credit: transform_amt(txn.amount) }
+               end
+      end
+    end
+
+    def transform_amt(amt)
+      if amt >= 0
+        "#{amt.abs}"
+      else
+        "(#{amt.abs})"
+      end
     end
   end
 end

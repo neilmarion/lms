@@ -107,7 +107,7 @@ module Lms
           expect(loan.paid_balance).to eq -70000.0
           expect(loan.paid_interest).to eq -1000.00
           expect(loan.paid_principal).to eq -69000.0
-          expect(loan.status).to eq Loan::ONTIME
+          expect(loan.reload.status).to eq Loan::EARLY
 
           # Customer pays on time on 2020-05-01
           current_date = "2020-05-01"
@@ -123,7 +123,7 @@ module Lms
           expect(loan.paid_balance).to eq -101310.0
           expect(loan.paid_interest).to eq -1310.0
           expect(loan.paid_principal).to eq -100000.00
-          expect(loan.status).to eq Loan::ONTIME
+          expect(loan.reload.status).to eq Loan::ONTIME
         end
       end
     end
@@ -196,6 +196,10 @@ module Lms
           expect(loan.paid_interest).to eq -1535.96
           expect(loan.paid_principal).to eq -100000.0
           expect(loan.reload.status).to eq Loan::ONTIME
+
+          builder = ViewBuilder.new(loan)
+          view = builder.execute
+          binding.pry
         end
       end
     end
