@@ -79,5 +79,53 @@ module Lms
         end
       end
     end
+
+    describe "scenarios" do
+      context "when loan is paid early" do
+        specify do
+          current_date = "2020-03-01"
+          allow(Date).to receive(:today).and_return(current_date.to_date)
+          expect(loan.remaining_balance).to eq 101502.49
+          expect(loan.remaining_interest).to eq 1502.49
+          expect(loan.remaining_principal).to eq 100000.00
+          expect(loan.paid_balance).to eq 0.0
+          expect(loan.paid_interest).to eq 0.0
+          expect(loan.paid_principal).to eq 0.0
+          expect(loan.status).to eq Loan::ONTIME
+
+          # Customer pays on time on 2020-04-01
+          current_date = "2020-04-01"
+          allow(Date).to receive(:today).and_return(current_date.to_date)
+          actual_transaction = loan.actual_transactions.create({
+            amount: -1*70000,
+            created_at: current_date,
+            updated_at: current_date,
+          })
+          expect(loan.remaining_balance).to eq 31310.0
+          expect(loan.remaining_interest).to eq 310.0
+          expect(loan.remaining_principal).to eq 31000.0
+          expect(loan.paid_balance).to eq -70000.0
+          expect(loan.paid_interest).to eq -1000.00
+          expect(loan.paid_principal).to eq -69000.0
+          expect(loan.status).to eq Loan::ONTIME
+
+          # Customer pays on time on 2020-05-01
+          current_date = "2020-05-01"
+          allow(Date).to receive(:today).and_return(current_date.to_date)
+          actual_transaction = loan.actual_transactions.create({
+            amount: -1*31310.0,
+            created_at: current_date,
+            updated_at: current_date,
+          })
+          expect(loan.remaining_balance).to eq 0.0
+          expect(loan.remaining_interest).to eq 0.0
+          expect(loan.remaining_principal).to eq 0.0
+          expect(loan.paid_balance).to eq -101310.0
+          expect(loan.paid_interest).to eq -1310.0
+          expect(loan.paid_principal).to eq -100000.00
+          expect(loan.status).to eq Loan::ONTIME
+        end
+      end
+    end
   end
 end

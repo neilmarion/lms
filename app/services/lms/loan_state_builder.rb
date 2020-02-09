@@ -1,14 +1,10 @@
 module Lms
   class LoanStateBuilder
-    FOR_BALANCING = "for_balancing"
-    FOR_CURRENT_STATE = "for_current_state"
+    attr_accessor :loan, :current_date, :logic
 
-    attr_accessor :loan, :current_date, :logic, :purpose
-
-    def initialize(loan, current_date, purpose = FOR_BALANCING)
+    def initialize(loan, current_date)
       @loan = loan
       @current_date = current_date
-      @purpose = purpose
     end
 
     def execute
@@ -28,19 +24,11 @@ module Lms
     private
 
     def realized_actual_transactions
-      if purpose == "for_balancing"
-        loan.actual_transactions.where("created_at < ?", DateTime.strptime(current_date.to_s, "%Y-%m-%d"))
-      else
-        loan.actual_transactions.where("created_at <= ?", DateTime.strptime(current_date.to_s, "%Y-%m-%d"))
-      end
+      loan.actual_transactions.where("created_at <= ?", DateTime.strptime(current_date.to_s, "%Y-%m-%d"))
     end
 
     def unrealized_expected_transactions
-      if purpose == "for_balancing"
-        loan.expected_transactions.where("date >= ?", current_date)
-      else
-        loan.expected_transactions.where("date > ?", current_date)
-      end
+      loan.expected_transactions.where("date > ?", current_date)
     end
 
     def daily_interest_map

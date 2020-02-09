@@ -80,7 +80,7 @@ module Lms
     end
 
     def state
-      sequence_logic = Lms::LoanStateBuilder.new(self, current_date, LoanStateBuilder::FOR_CURRENT_STATE).execute
+      sequence_logic = Lms::LoanStateBuilder.new(self, current_date).execute
       table = sequence_logic.execute
       table[current_date.to_s]
     end
@@ -90,7 +90,7 @@ module Lms
     end
 
     def remaining_balance
-      state[:bal_rem].round(2)
+      (expected_transactions.pluck(:amount).sum + actual_transactions.pluck(:amount).sum).round(2)
     end
 
     def remaining_principal

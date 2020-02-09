@@ -19,13 +19,9 @@ module Lms
       status = case result
       when Loan::LATE
         interest = loan.remaining_balance + adjustments[:new_balance]
-        loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -1*interest) if interest != 0
+        loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -1*interest) if interest.round(2) != 0
       when Loan::ONTIME
-        initial_repayment_dates.select{ |x| x > current_date }.each do |date|
-          principal_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_PRINCIPAL, ExpectedTransaction::PRINCIPAL]).pluck(:amount).sum
-          principal_adjustment = (principal_sum + adjustments[date.to_s][:pri_chg])
-          loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: date, amount: -1*principal_adjustment) if principal_adjustment != 0
-
+        initial_repayment_dates.select{ |x| x >= current_date }.each do |date|
           interest_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_INTEREST, ExpectedTransaction::INTEREST]).pluck(:amount).sum
           interest_adjustment = (interest_sum + adjustments[date.to_s][:int_chg])
           loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: -1*interest_adjustment) if interest_adjustment != 0

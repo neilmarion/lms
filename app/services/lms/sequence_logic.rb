@@ -55,6 +55,7 @@ module Lms
 
         int_chg, pri_chg = calculate_changes(int_chg, pri_chg, tot_chg, tot_int)
 
+
         bal_rem = temp[:bal_rem] + int_chg + pri_chg
         int_rem = temp[:int_rem] + int_chg
         pri_rem = temp[:pri_rem] + pri_chg
