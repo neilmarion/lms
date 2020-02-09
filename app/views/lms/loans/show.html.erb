@@ -1,0 +1,23 @@
+<table class="loan">
+  <tr>
+    <th class="date">Date</th>
+    <th>Charges</th>
+    <th>Debit</th>
+    <th>Note</th>
+  </tr>
+  <% @view.each do |period| %>
+    <tr>
+      <td>
+        <%= period[:date] %>
+      </td>
+      <td>
+        <%= period[:charges] %>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  <% end%>
+
+</table>

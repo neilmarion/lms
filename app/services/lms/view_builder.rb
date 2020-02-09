@@ -31,7 +31,7 @@ module Lms
         actual_txns = transform_txns(loan.actual_transactions.where(created_at: date_range))
         txns = expected_txns + actual_txns
 
-        arr << { date: date.to_s, charges: init_txns.pluck(:amount).sum.to_s, txns: txns.sort_by{ |x| x[:date] } }
+        arr << { date: date.to_s, charges: init_txns.pluck(:amount).sum.round(2).to_s, txns: txns.sort_by{ |x| x[:date] } }
         arr
       end
     end
@@ -49,9 +49,9 @@ module Lms
 
     def transform_amt(amt)
       if amt >= 0
-        "#{amt.abs}"
+        "#{amt.round(2).abs}"
       else
-        "(#{amt.abs})"
+        "(#{amt.round(2).abs})"
       end
     end
   end
