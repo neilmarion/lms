@@ -1,4 +1,3 @@
-<%= link_to "Next Day", change_date_loan_path(@loan.id), { method: :get } %>
 
 <table class="headings">
   <tr>
@@ -100,7 +99,26 @@
       <%= @loan.date_today %>
     </td>
   </tr>
+  <tr>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td class="figure-label label">
+      <%= link_to "Next Day", change_date_loan_path(@loan.id), { method: :get } %>
+    </td>
+  </tr>
 </table>
+
+
 
 <br><br><br>
 
