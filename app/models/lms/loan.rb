@@ -98,6 +98,7 @@ module Lms
 
     def remaining_balance
       (expected_transactions.pluck(:amount).sum + actual_transactions.pluck(:amount).sum).round(2)
+      #state[:bal_rem].round(2)
     end
 
     def remaining_principal
