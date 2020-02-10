@@ -11,14 +11,11 @@
     <th>tot_ipd</th>
     <th>tot_ppd</th>
     <th>tot_bpd</th>
-    <th>bal_rem</th>
-    <th>int_rem</th>
-    <th>pri_rem</th>
     <th>zzz_int</th>
     <th>zzz_pri</th>
     <th>zzz_bal</th>
   </tr>
-  <% @loan.table.each do |date, hash| %>
+  <% @loan.loan_state.expected_sequence.each do |date, hash| %>
     <tr>
       <td><%= date %></td>
       <td><%= hash[:aaa_bal].round(2) %></td>
@@ -31,9 +28,6 @@
       <td><%= hash[:tot_ipd].round(2) %></td>
       <td><%= hash[:tot_ppd].round(2) %></td>
       <td><%= hash[:tot_bpd].round(2) %></td>
-      <td><%= hash[:bal_rem].round(2) %></td>
-      <td><%= hash[:int_rem].round(2) %></td>
-      <td><%= hash[:pri_rem].round(2) %></td>
       <td><%= hash[:zzz_int].round(2) %></td>
       <td><%= hash[:zzz_pri].round(2) %></td>
       <td><%= hash[:zzz_bal].round(2) %></td>

@@ -27,7 +27,7 @@ module Lms
         ])
 
         date_range = (date.last_month+1.day)...(date+1.day)
-        expected_txns = transform_txns(loan.expected_transactions.where(kind: [ExpectedTransaction::INTEREST, ExpectedTransaction::PRINCIPAL], date: date_range))
+        expected_txns = transform_txns(loan.expected_transactions.where(kind: [ExpectedTransaction::INTEREST_FEE, ExpectedTransaction::INTEREST, ExpectedTransaction::PRINCIPAL], date: date_range))
         actual_txns = transform_txns(loan.actual_transactions.where(created_at: date_range))
         txns = expected_txns + actual_txns
 
