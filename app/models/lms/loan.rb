@@ -81,13 +81,13 @@ module Lms
     end
 
     def state
-      sequence_logic = Lms::LoanStateBuilder.new(self, current_date, LoanStateBuilder::FOR_BALANCING).execute
+      sequence_logic = Lms::SequenceLogicBuilder.new(self, current_date, SequenceLogicBuilder::FOR_BALANCING).execute
       table = sequence_logic.execute
       table[current_date.to_s]
     end
 
     def table
-      sequence_logic = Lms::LoanStateBuilder.new(self, current_date, LoanStateBuilder::FOR_BALANCING).execute
+      sequence_logic = Lms::SequenceLogicBuilder.new(self, current_date, SequenceLogicBuilder::FOR_BALANCING).execute
       table = sequence_logic.execute
       table
     end

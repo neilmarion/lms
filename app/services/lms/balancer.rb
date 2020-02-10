@@ -8,7 +8,7 @@ module Lms
     end
 
     def execute
-      sequence_logic = LoanStateBuilder.new(loan, current_date, LoanStateBuilder::FOR_BALANCING).execute
+      sequence_logic = SequenceLogicBuilder.new(loan, current_date, SequenceLogicBuilder::FOR_BALANCING).execute
       initial_repayment_dates = loan.initial_repayment_dates
       date_of_balance = loan.date_of_balance
       balancing_logic = BalancingLogic.new(sequence_logic, initial_repayment_dates, date_of_balance, current_date)
