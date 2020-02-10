@@ -22,15 +22,27 @@ module Lms
         loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -1*interest, note: "Late payment - #{current_date}") if interest.round(2) != 0
       when Loan::EARLY
         initial_repayment_dates.select{ |x| x >= current_date }.each do |date|
-          amount = adjustments.select{ |x| x[:date] == date }.map{ |x| x[:amount] }.sum
+          amount = adjustments.select{ |x| x[:date] == date.to_s }.map{ |x| x[:amount] }.sum
           principal_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_PRINCIPAL, ExpectedTransaction::PRINCIPAL]).pluck(:amount).sum
           interest_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_INTEREST, ExpectedTransaction::INTEREST]).pluck(:amount).sum
 
-          loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: -1*interest_sum, note: "int Early payment adj - #{current_date}")
-          loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: date, amount: -1*principal_sum, note: "pri Early payment adj - #{current_date}")
-          loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: current_date, amount: principal_sum, note: "pri Early payment adj - #{current_date}")
+          next if amount.round(2) == 0
+
+
+
+          principal_to_transfer = amount - interest_sum
+          interest_to_remove = if amount >= interest_sum
+                                 interest_sum
+                               else
+                                  amount
+                               end
+
+          loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: -interest_to_remove, note: "int Early payment adj - #{current_date}")
+          loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: date, amount: -principal_to_transfer, note: "pri Early payment adj - #{current_date}")
+          loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: current_date, amount: principal_to_transfer, note: "pri Early payment adj - #{current_date}")
         end
 
+        binding.pry
         loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -table[current_date.to_s][:int_chg], note: "pri Early payment adj - #{current_date}")
       end
 
