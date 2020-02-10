@@ -24,6 +24,10 @@ module Lms
       redirect_to loan_path(@loan.id)
     end
 
+    def table
+      @loan = Loan.find(params[:id])
+    end
+
     def loan_params
       params.require(:loan).permit(
         :period, :amount, :interest, :period_count, :start_date,
