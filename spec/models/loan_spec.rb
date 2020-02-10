@@ -93,7 +93,6 @@ module Lms
           expect(loan.paid_principal).to eq 0.0
           expect(loan.status).to eq Loan::ONTIME
 
-          binding.pry
           # Customer pays on time on 2020-04-01
           current_date = "2020-04-01"
           allow(Date).to receive(:today).and_return(current_date.to_date)
@@ -102,8 +101,7 @@ module Lms
             created_at: current_date,
             updated_at: current_date,
           })
-          binding.pry
-          expect(loan.remaining_balance).to eq 32000
+          expect(loan.remaining_balance).to eq 30310.0
           expect(loan.remaining_interest).to eq 310.0
           expect(loan.remaining_principal).to eq 31000.0
           expect(loan.paid_balance).to eq -70000.0
