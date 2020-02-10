@@ -35,6 +35,10 @@ module Lms
           loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: -interest_sum, note: "int Early payment adj - #{current_date}")
           loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: date, amount: -principal_sum, note: "pri Early payment adj - #{current_date}")
         end
+
+        if !initial_repayment_dates.include?(current_date)
+          loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -adjustments[current_date.to_s][:int_chg], note: "int Early payment adj - #{current_date}")
+        end
       end
 
       [table, result]
