@@ -81,13 +81,13 @@ module Lms
     end
 
     def state
-      sequence_logic = Lms::LoanStateBuilder.new(self, current_date).execute
+      sequence_logic = Lms::LoanStateBuilder.new(self, current_date, LoanStateBuilder::FOR_BALANCING).execute
       table = sequence_logic.execute
       table[current_date.to_s]
     end
 
     def table
-      sequence_logic = Lms::LoanStateBuilder.new(self, current_date).execute
+      sequence_logic = Lms::LoanStateBuilder.new(self, current_date, LoanStateBuilder::FOR_BALANCING).execute
       table = sequence_logic.execute
       table
     end
@@ -97,16 +97,13 @@ module Lms
     end
 
     def remaining_balance
-      (expected_transactions.pluck(:amount).sum + actual_transactions.pluck(:amount).sum).round(2)
-      #state[:bal_rem].round(2)
+      #(expected_transactions.pluck(:amount).sum + actual_transactions.pluck(:amount).sum).round(2)
     end
 
     def remaining_principal
-      state[:pri_rem].round(2)
     end
 
     def remaining_interest
-      state[:int_rem].round(2)
     end
 
     def paid_balance

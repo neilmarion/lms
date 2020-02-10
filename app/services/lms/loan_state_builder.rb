@@ -1,24 +1,30 @@
 module Lms
   class LoanStateBuilder
-    attr_accessor :loan, :current_date, :logic
+    attr_accessor :loan, :current_date, :logic, :purpose
 
-    def initialize(loan, current_date)
+    EXPECTED = "expected".freeze
+    ACTUAL = "actual".freeze
+    FOR_BALANCING = "for_balancing".freeze
+
+    def initialize(loan, current_date, purpose)
       @loan = loan
       @current_date = current_date
+      @purpose = purpose
     end
 
     def execute
-      actual_txns = transform_transactions(realized_actual_transactions)
-      expected_txns = transform_transactions(unrealized_expected_transactions)
-      txns = actual_txns + expected_txns
+      txns = case purpose
+      when EXPECTED
+        transform_transactions(loan.expected_transactions)
+      when ACTUAL
+        transform_transactions(loan.actual_transactions)
+      when FOR_BALANCING
+        actual_txns = transform_transactions(realized_actual_transactions)
+        expected_txns = transform_transactions(unrealized_expected_transactions)
+        actual_txns + expected_txns
+      end
 
-      expected_transactions_sums = {
-        bal: loan.expected_transactions_sum,
-        int: loan.expected_interest_transactions_sum,
-        pri: loan.expected_principal_transactions_sum,
-      }
-
-      Lms::SequenceLogic.new(loan.amount, daily_interest_map, txns, expected_transactions_sums)
+      Lms::SequenceLogic.new(loan.amount, daily_interest_map, txns)
     end
 
     private

@@ -8,7 +8,7 @@ module Lms
     end
 
     def execute
-      sequence_logic = LoanStateBuilder.new(loan, current_date).execute
+      sequence_logic = LoanStateBuilder.new(loan, current_date, LoanStateBuilder::FOR_BALANCING).execute
       initial_repayment_dates = loan.initial_repayment_dates
       date_of_balance = loan.date_of_balance
       balancing_logic = BalancingLogic.new(sequence_logic, initial_repayment_dates, date_of_balance, current_date)
@@ -34,10 +34,6 @@ module Lms
 
           loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: -interest_sum, note: "int Early payment adj - #{current_date}")
           loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: date, amount: -principal_sum, note: "pri Early payment adj - #{current_date}")
-        end
-
-        if !initial_repayment_dates.include?(current_date)
-          loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -adjustments[current_date.to_s][:int_chg], note: "int Early payment adj - #{current_date}")
         end
       end
 

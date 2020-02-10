@@ -1,12 +1,11 @@
 module Lms
   class SequenceLogic
-    attr_accessor :amount, :daily_interest_map, :transactions, :exp_tra
+    attr_accessor :amount, :daily_interest_map, :transactions
 
-    def initialize(amount, daily_interest_map, transactions, exp_tra)
+    def initialize(amount, daily_interest_map, transactions)
       @amount = amount
       @daily_interest_map = daily_interest_map
       @transactions = transactions
-      @exp_tra = exp_tra
     end
 
     def execute
@@ -35,15 +34,11 @@ module Lms
       # tot_ppd = total principal paid
       # tot_bpd = total balance paid
       #
-      # int_rem = total interest remaining (after computation of all interests)
-      # pri_rem = total principal remaining (after computation of all interests)
-      # bal_rem = total balance remaining (after computation of all interests)
-      #
       # zzz_int = ending interest
       # zzz_pri = ending principal
       # zzz_bal = ending balance
 
-      temp = {zzz_bal: amount.to_f, zzz_pri: amount.to_f, int_rem: exp_tra[:int], pri_rem: exp_tra[:pri], bal_rem: exp_tra[:bal]}
+      temp = {zzz_bal: amount.to_f, zzz_pri: amount.to_f}
       daily_interest_map.inject({}) do |table, (date, int)|
         aaa_bal = temp[:zzz_bal]
         aaa_pri = temp[:zzz_pri]
@@ -54,11 +49,6 @@ module Lms
         pri_chg = 0
 
         int_chg, pri_chg = calculate_changes(int_chg, pri_chg, tot_chg, tot_int)
-
-
-        bal_rem = temp[:bal_rem] + int_chg + pri_chg
-        int_rem = temp[:int_rem] + int_chg
-        pri_rem = temp[:pri_rem] + pri_chg
 
         zzz_int = tot_int + int_chg
         zzz_pri = aaa_pri + pri_chg
@@ -79,9 +69,6 @@ module Lms
           tot_ipd: tot_ipd,
           tot_ppd: tot_ppd,
           tot_bpd: tot_bpd,
-          bal_rem: bal_rem,
-          int_rem: int_rem,
-          pri_rem: pri_rem,
           zzz_int: zzz_int,
           zzz_pri: zzz_pri,
           zzz_bal: zzz_bal,

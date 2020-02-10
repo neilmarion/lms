@@ -1,5 +1,6 @@
 <table class="loan">
   <tr>
+    <th>date</th>
     <th>aaa_bal</th>
     <th>aaa_pri</th>
     <th>day_int</th>
@@ -19,6 +20,7 @@
   </tr>
   <% @loan.table.each do |date, hash| %>
     <tr>
+      <td><%= date %></td>
       <td><%= hash[:aaa_bal].round(2) %></td>
       <td><%= hash[:aaa_pri].round(2) %></td>
       <td><%= hash[:day_int].round(2) %></td>

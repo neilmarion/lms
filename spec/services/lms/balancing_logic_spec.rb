@@ -79,7 +79,7 @@ module Lms
     let(:date_of_balance) { "2020-05-01" }
     let(:amount) { 100000 }
     let(:sequence_logic) do
-      SequenceLogic.new(amount, daily_interest_map, transactions, {bal: 101502.487562189, pri: 100000, int: 1502.487562189})
+      SequenceLogic.new(amount, daily_interest_map, transactions)
     end
 
     context "customer paid late" do

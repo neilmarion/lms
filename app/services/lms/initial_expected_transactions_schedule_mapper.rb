@@ -20,7 +20,7 @@ module Lms
         pri: loan.expected_principal_transactions_sum,
       }
 
-      service = SequenceLogic.new(loan.amount, daily_interest_map, txns, expected_transactions_sums)
+      service = SequenceLogic.new(loan.amount, daily_interest_map, txns)
       table = service.execute
 
       period_due_date = loan.start_date.next_month
