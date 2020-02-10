@@ -15,7 +15,7 @@ module Lms
     def execute
       txns = case purpose
       when EXPECTED
-        transform_transactions(loan.expected_transactions)
+        transform_transactions(loan.expected_transactions.where.not(kind: ExpectedTransaction::INTEREST_FEE))
       when ACTUAL
         transform_transactions(loan.actual_transactions)
       when FOR_BALANCING

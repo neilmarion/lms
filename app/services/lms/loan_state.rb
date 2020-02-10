@@ -9,39 +9,42 @@ module Lms
     end
 
     def remaining_balance
-      binding.pry
-      expected_sequence[date_of_balance.to_s][:tot_bpd] -
-        actual_sequence[current_date.to_s][:tot_bpd]
+      (expected_sequence[date_of_balance.to_s][:tot_bpd].abs + interest_fees_sum)-
+        actual_sequence[current_date.to_s][:tot_bpd].abs
     end
 
     def remaining_principal
-      expected_sequence[date_of_balance.to_s][:tot_ppd] -
-        actual_sequence[current_date.to_s][:tot_ppd]
+      expected_sequence[date_of_balance.to_s][:tot_ppd].abs -
+        actual_sequence[current_date.to_s][:tot_ppd].abs
     end
 
     def remaining_interest
-      expected_sequence[date_of_balance.to_s][:tot_ipd] -
-        actual_sequence[current_date.to_s][:tot_ipd]
+      (expected_sequence[date_of_balance.to_s][:tot_ipd].abs + interest_fees_sum) -
+        actual_sequence[current_date.to_s][:tot_ipd].abs
     end
 
     def paid_balance
-      actual_sequence[current_date.to_s][:tot_bpd]
+      actual_sequence[current_date.to_s][:tot_bpd].abs
     end
 
     def paid_principal
-      actual_sequence[current_date.to_s][:tot_ppd]
+      actual_sequence[current_date.to_s][:tot_ppd].abs
     end
 
     def paid_interest
-      actual_sequence[current_date.to_s][:tot_ipd]
+      actual_sequence[current_date.to_s][:tot_ipd].abs
     end
 
     def pay_to_balance
-      actual_sequence[current_date.to_s][:zzz_bal]
+      actual_sequence[current_date.to_s][:zzz_bal].abs
     end
 
     def expected_balance
-      expected_sequence[date_of_balance.to_s][:tot_bpd]
+      expected_sequence[date_of_balance.to_s][:tot_bpd].abs
+    end
+
+    def zzz_bal
+      expected_sequence[date_of_balance.to_s][:zzz_bal]
     end
 
     def expected_payment_per_period
@@ -65,6 +68,10 @@ module Lms
 
     def date_of_balance
       initial_repayment_dates.sort.last
+    end
+
+    def interest_fees_sum
+      loan.expected_transactions.where(kind: [ExpectedTransaction::INTEREST_FEE]).pluck(:amount).sum
     end
 
     private

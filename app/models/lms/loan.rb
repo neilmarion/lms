@@ -17,7 +17,7 @@ module Lms
     ONTIME = "ontime"
 
     def loan_state
-      @loan_state ||= LoanState.new(self)
+      LoanState.new(self)
     end
 
     def do_balance
@@ -94,6 +94,14 @@ module Lms
 
     def pay_to_balance
       loan_state.pay_to_balance
+    end
+
+    def expected_balance
+      loan_state.expected_balance
+    end
+
+    def zzz_bal
+      loan_state.zzz_bal
     end
   end
 end

@@ -18,8 +18,8 @@ module Lms
 
       case result
       when Loan::LATE
-        interest = loan.expected_transactions_sum + adjustments[:new_balance]
-        loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -1*interest, note: "Late payment - #{current_date}") if interest.round(2) != 0
+        interest = loan.expected_transactions_sum + loan.expected_transactions.where(kind: ExpectedTransaction::INTEREST_FEE).pluck(:amount).sum + adjustments[:new_balance]
+        loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST_FEE, date: current_date, amount: -1*interest, note: "Late payment - #{current_date}") if interest.round(2) != 0
       when Loan::EARLY
         initial_repayment_dates.select{ |x| x > current_date }.each do |date|
           principal_sum = loan.expected_transactions.where(date: date, kind: [ExpectedTransaction::INIT_PRINCIPAL, ExpectedTransaction::PRINCIPAL]).pluck(:amount).sum
