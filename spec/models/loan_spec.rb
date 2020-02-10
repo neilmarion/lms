@@ -101,12 +101,12 @@ module Lms
             created_at: current_date,
             updated_at: current_date,
           })
-          expect(loan.remaining_balance).to eq 30310.0
-          expect(loan.remaining_interest).to eq 310.0
-          expect(loan.remaining_principal).to eq 31000.0
           expect(loan.paid_balance).to eq -70000.0
           expect(loan.paid_interest).to eq -1000.00
           expect(loan.paid_principal).to eq -69000.0
+          expect(loan.remaining_balance).to eq 30310.0
+          expect(loan.remaining_interest).to eq 310.0
+          expect(loan.remaining_principal).to eq 31000.0
           expect(loan.reload.status).to eq Loan::EARLY
 
           current_date = "2020-05-01"

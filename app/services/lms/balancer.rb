@@ -40,9 +40,8 @@ module Lms
           loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: -interest_to_remove, note: "int Early payment adj - #{current_date}")
           loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: date, amount: -principal_to_transfer, note: "pri Early payment adj - #{current_date}")
           loan.expected_transactions.create(kind: ExpectedTransaction::PRINCIPAL, date: current_date, amount: principal_to_transfer, note: "pri Early payment adj - #{current_date}")
+          loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: date, amount: table[current_date.to_s][:int_rem], note: "pri Early payment adj - #{current_date}")
         end
-
-        # loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST, date: current_date, amount: -table[current_date.to_s][:int_rem], note: "pri Early payment adj - #{current_date}")
       end
 
       [table, result]
