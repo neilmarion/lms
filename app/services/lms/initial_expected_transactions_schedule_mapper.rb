@@ -14,12 +14,6 @@ module Lms
         arr
       end
 
-      expected_transactions_sums = {
-        bal: loan.expected_transactions_sum,
-        int: loan.expected_interest_transactions_sum,
-        pri: loan.expected_principal_transactions_sum,
-      }
-
       service = SequenceLogic.new(loan.amount, daily_interest_map, txns)
       table = service.execute
 
