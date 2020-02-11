@@ -153,7 +153,6 @@ module Lms
           allow(Date).to receive(:today).and_return(current_date.to_date)
           loan.do_balance
 
-          binding.pry
           expect(loan.remaining_balance.round(2)).to eq 101519.23
           expect(loan.remaining_interest.round(2)).to eq 1519.23
           expect(loan.remaining_principal.round(2)).to eq 100000
@@ -181,7 +180,7 @@ module Lms
 
           expect(loan.remaining_balance.round(2)).to eq 50751.24
           expect(loan.remaining_interest.round(2)).to eq 469.3
-          expect(loan.remaining_principal.round(2)).to eq 50281.94
+          expect(loan.remaining_principal.round(2)).to eq 50281.95
           expect(loan.paid_balance.round(2)).to eq 50784.72
           expect(loan.paid_interest.round(2)).to eq 1066.67
           expect(loan.paid_principal.round(2)).to eq 49718.06

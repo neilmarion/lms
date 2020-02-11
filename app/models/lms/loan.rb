@@ -113,10 +113,6 @@ module Lms
       loan_state.status
     end
 
-    def zzz_bal
-      loan_state.zzz_bal
-    end
-
     def interest_fees_sum
       expected_transactions.where(kind: [ExpectedTransaction::INTEREST_FEE]).pluck(:amount).sum
     end

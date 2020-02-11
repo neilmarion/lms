@@ -100,14 +100,7 @@ module Lms
           balancer = described_class.new(loan, current_date.to_date)
           balancer.execute
           expected_txns_count = loan.expected_transactions.count
-        }.to change{ expected_txns_count }.from 4
-
-        # NOTE: No more expected transactions must be created after balancing
-        expect {
-          balancer = described_class.new(loan, current_date.to_date)
-          balancer.execute
-          expected_txns_count = loan.expected_transactions.count
-        }.not_to change{ expected_txns_count }.from 9
+        }.to_not change{ expected_txns_count }
       end
     end
   end

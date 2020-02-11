@@ -1,10 +1,11 @@
 module Lms
   class SequenceLogicBuilder
-    attr_accessor :loan, :current_date, :logic
+    attr_accessor :loan, :current_date, :logic, :purpose
 
-    def initialize(loan, current_date)
+    def initialize(loan, current_date, purpose="balancing")
       @loan = loan
       @current_date = current_date
+      @purpose = purpose
     end
 
     def execute
@@ -12,7 +13,11 @@ module Lms
       expected_txns = transform_transactions(unrealized_expected_transactions)
       txns = actual_txns + expected_txns
 
-      Lms::SequenceLogic.new(loan.amount, daily_interest_map, txns)
+      if purpose == "balancing"
+        return Lms::SequenceLogic.new(loan.amount, daily_interest_map, txns)
+      else
+        return Lms::SequenceLogic.new(loan.amount, daily_interest_map, actual_txns)
+      end
     end
 
     private
