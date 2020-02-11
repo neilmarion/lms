@@ -23,31 +23,43 @@ module Lms
       balanced_sequence = loan.loan_state.balanced_sequence
 
       actual_transactions = loan.actual_transactions.inject({}) do |hash, value|
-        hash[value.created_at.to_date] = { amount: value.amount.round(2), note: value.note }
+        hash[value.created_at.to_date] = { amount: value.amount.abs.round(2), note: value.note }
         hash
       end
 
       expected_transactions = loan.expected_transactions.where(kind: "interest_fee").inject({}) do |hash, value|
-        hash[value.date] = { amount: value.amount.round(2), note: value.note }
+        hash[value.date] = { amount: value.amount.abs.round(2), note: value.note }
         hash
       end
 
       loan.initial_repayment_dates.inject({}) do |hash, date|
+        biggest_int_chg = 0
+        biggest_pri_chg = 0
+        biggest_bal_chg = 0
+
         actual_txns = actual_transactions.select do |d, value|
           d.between?(date.last_month+1.day, date+1.day)
         end.inject([]) do |arr, (d, txn)|
+          int_chg = balanced_sequence[d.to_s][:int_chg].abs.round(2)
+          pri_chg = balanced_sequence[d.to_s][:pri_chg].abs.round(2)
+          tot_chg = balanced_sequence[d.to_s][:tot_chg].abs.round(2)
+
           arr << {
             date: d.to_s,
             ctot_ipd: nil,
             ctot_ppd: nil,
             ctot_bpd: nil,
             camount: nil,
-            ptot_ipd: balanced_sequence[d.to_s][:tot_ipd].round(2),
-            ptot_ppd: balanced_sequence[d.to_s][:tot_ppd].round(2),
-            ptot_bpd: balanced_sequence[d.to_s][:tot_bpd].round(2),
+            ptot_ipd: int_chg,
+            ptot_ppd: pri_chg,
+            ptot_bpd: tot_chg,
             pamount: txn[:amount],
             note: txn[:note],
           }
+
+          biggest_int_chg = [int_chg, biggest_int_chg].max
+          biggest_pri_chg = [pri_chg, biggest_pri_chg].max
+          biggest_bal_chg = [tot_chg, biggest_bal_chg].max
 
           arr
         end
@@ -57,10 +69,10 @@ module Lms
         end.inject([]) do |arr, (d, txn)|
           arr << {
             date: d.to_s,
-            ctot_ipd: txn[:amount],
+            ctot_ipd: txn[:amount].abs,
             ctot_ppd: 0,
-            ctot_bpd: txn[:amount],
-            camount: txn[:amount],
+            ctot_bpd: txn[:amount].abs,
+            camount: txn[:amount].abs,
             ptot_ipd: nil,
             ptot_ppd: nil,
             ptot_bpd: nil,
@@ -72,9 +84,9 @@ module Lms
         end
 
         hash[date] = {
-          tot_bpd: balanced_sequence[date.to_s][:tot_bpd].round(2),
-          tot_ppd: balanced_sequence[date.to_s][:tot_ppd].round(2),
-          tot_ipd: balanced_sequence[date.to_s][:tot_ipd].round(2),
+          tot_bpd: [balanced_sequence[date.to_s][:tot_chg].abs.round(2), biggest_bal_chg].max,
+          tot_ppd: [balanced_sequence[date.to_s][:pri_chg].abs.round(2), biggest_pri_chg].max,
+          tot_ipd: [balanced_sequence[date.to_s][:int_chg].abs.round(2), biggest_int_chg].max,
           txns: expected_txns + actual_txns,
         }
 

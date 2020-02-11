@@ -46,13 +46,16 @@ module Lms
       balanced_sequence[current_date.to_s][:tot_bpd].abs
     end
 
+    def get_balanced_sequence_on_date(date)
+      balanced_sequence, status = Balancer.new(loan, date).execute
+      balanced_sequence
+    end
+
     private
 
     def build_sequences
-      @sequence, @status = Balancer.new(loan, current_date).execute
-      sequence_logic = SequenceLogicBuilder.new(loan, current_date, "actual").execute
-
       @balanced_sequence, @status = Balancer.new(loan, current_date).execute
+      sequence_logic = SequenceLogicBuilder.new(loan, current_date, "actual").execute
       @actual_sequence, s = sequence_logic.execute
     end
 
