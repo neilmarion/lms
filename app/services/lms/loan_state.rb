@@ -42,6 +42,10 @@ module Lms
       balanced_sequence[date_of_balance.to_s][:tot_bpd].abs
     end
 
+    def due_to_pay_now
+      balanced_sequence[current_date.to_s][:tot_bpd].abs
+    end
+
     private
 
     def build_sequences
