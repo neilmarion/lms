@@ -149,9 +149,9 @@
     <th>int</th><th>pri</th><th>tot</th>
     <th>Notes</th>
   </tr>
-  <% @view.each do |date, period| %>
+  <% @view[:figures].each do |date, period| %>
     <tr class="period">
-      <td><%= date %> to <%= date.next_month %></td>
+      <td><%= date.last_month %> to <%= date %></td>
       <td></td>
       <td></td>
       <td></td>
@@ -175,7 +175,7 @@
     <% end %>
 
     <tr>
-      <td>Due <%= date %></td>
+      <td class="date">Due <%= date %></td>
       <td><%= period[:tot_ipd] %></td>
       <td><%= period[:tot_ppd] %></td>
       <td><%= period[:tot_bpd] %></td>
@@ -185,6 +185,31 @@
       <td></td>
     </tr>
   <% end%>
+  <tr class="totals">
+    <td>
+      Totals
+    </td>
+    <td>
+      <%= @view[:totals][:bipd] %>
+    </td>
+    <td>
+      <%= @view[:totals][:bppd] %>
+    </td>
+    <td>
+      <%= @view[:totals][:bbpd] %>
+    </td>
+    <td>
+      <%= @view[:totals][:aipd] %>
+    </td>
+    <td>
+      <%= @view[:totals][:appd] %>
+    </td>
+    <td>
+      <%= @view[:totals][:abpd] %>
+    </td>
+    <td>
+    </td>
+  </tr>
 
 </table>
 

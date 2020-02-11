@@ -172,3 +172,8 @@ div {
 .date {
   text-align: right;
 }
+
+.totals {
+  color: #fff;
+  background-color: #34495e
+}

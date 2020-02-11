@@ -32,13 +32,13 @@ module Lms
         hash
       end
 
-      loan.initial_repayment_dates.inject({}) do |hash, date|
+      figures = loan.initial_repayment_dates.inject({}) do |hash, date|
         biggest_int_chg = 0
         biggest_pri_chg = 0
         biggest_bal_chg = 0
 
         actual_txns = actual_transactions.select do |d, value|
-          d.between?(date.last_month+1.day, date+1.day)
+          d.between?(date.last_month, date)
         end.inject([]) do |arr, (d, txn)|
           int_chg = balanced_sequence[d.to_s][:int_chg].abs.round(2)
           pri_chg = balanced_sequence[d.to_s][:pri_chg].abs.round(2)
@@ -61,11 +61,11 @@ module Lms
           biggest_pri_chg = [pri_chg, biggest_pri_chg].max
           biggest_bal_chg = [tot_chg, biggest_bal_chg].max
 
-          arr
+          arr.sort_by{|x| x[:date]}
         end
 
         expected_txns = expected_transactions.select do |d, value|
-          d.between?(date.last_month+1.day, date+1.day)
+          d.between?(date.last_month, date)
         end.inject([]) do |arr, (d, txn)|
           arr << {
             date: d.to_s,
@@ -80,7 +80,7 @@ module Lms
             note: txn[:note],
           }
 
-          arr
+          arr.sort_by{|x| x[:date]}
         end
 
         hash[date] = {
@@ -92,6 +92,15 @@ module Lms
 
         hash
       end.sort
+
+      aipd = actual_sequence[loan.date_of_balance.to_s][:tot_ipd].abs.round(2)
+      appd = actual_sequence[loan.date_of_balance.to_s][:tot_ppd].abs.round(2)
+      abpd = actual_sequence[loan.date_of_balance.to_s][:tot_bpd].abs.round(2)
+      bipd = balanced_sequence[loan.date_of_balance.to_s][:tot_ipd].abs.round(2)
+      bppd = balanced_sequence[loan.date_of_balance.to_s][:tot_ppd].abs.round(2)
+      bbpd = balanced_sequence[loan.date_of_balance.to_s][:tot_bpd].abs.round(2)
+
+      { figures: figures, totals: { bipd: bipd, bppd: bppd, bbpd: bbpd, aipd: aipd, appd: appd, abpd: abpd }}
     end
 
 
