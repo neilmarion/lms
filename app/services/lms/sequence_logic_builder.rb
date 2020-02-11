@@ -1,28 +1,16 @@
 module Lms
   class SequenceLogicBuilder
-    attr_accessor :loan, :current_date, :logic, :purpose
+    attr_accessor :loan, :current_date, :logic
 
-    EXPECTED = "expected".freeze
-    ACTUAL = "actual".freeze
-    FOR_BALANCING = "for_balancing".freeze
-
-    def initialize(loan, current_date, purpose)
+    def initialize(loan, current_date)
       @loan = loan
       @current_date = current_date
-      @purpose = purpose
     end
 
     def execute
-      txns = case purpose
-      when EXPECTED
-        transform_transactions(loan.expected_transactions)
-      when ACTUAL
-        transform_transactions(loan.actual_transactions)
-      when FOR_BALANCING
-        actual_txns = transform_transactions(realized_actual_transactions)
-        expected_txns = transform_transactions(unrealized_expected_transactions)
-        actual_txns + expected_txns
-      end
+      actual_txns = transform_transactions(realized_actual_transactions)
+      expected_txns = transform_transactions(unrealized_expected_transactions)
+      txns = actual_txns + expected_txns
 
       Lms::SequenceLogic.new(loan.amount, daily_interest_map, txns)
     end
@@ -34,7 +22,7 @@ module Lms
     end
 
     def unrealized_expected_transactions
-      loan.expected_transactions.where("date > ?", current_date)
+      loan.expected_transactions.where("date > ?", current_date).where(kind: ["init_interest", "init_principal"])
     end
 
     def daily_interest_map

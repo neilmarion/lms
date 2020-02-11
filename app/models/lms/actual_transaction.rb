@@ -9,9 +9,7 @@ module Lms
 
     def do_balance
       balancer = Balancer.new(loan, loan.date_today || Date.today)
-      table, status = balancer.execute
-
-      loan.update_attributes(status: status)
+      balancer.execute
     end
   end
 end

@@ -17,18 +17,24 @@ module Lms
     ONTIME = "ontime"
 
     def loan_state
-      LoanState.new(self)
+      @loan_state || LoanState.new(self)
     end
 
     def do_balance
       balancer = Balancer.new(self, self.date_today || Date.today)
-      table, status = balancer.execute
+      balancer.execute
+    end
 
-      update_attributes(status: status)
+    def initial_balance
+      expected_payment_per_period * period_count
     end
 
     def expected_payment_per_period
-      loan_state.expected_payment_per_period
+      AmortizationCalculator.payment_per_period({
+        amount: amount,
+        interest: interest,
+        period_count: period_count,
+      })
     end
 
     def create_initial_expected_transactions
@@ -48,20 +54,23 @@ module Lms
       end
     end
 
+    def date_of_balance
+      initial_repayment_dates.sort.last
+    end
+
     def initial_balance
       loan_state.initial_balance
     end
 
     def initial_repayment_dates
-      loan_state.initial_repayment_dates
+      self.expected_transactions.where(kind: [
+        ExpectedTransaction::INIT_PRINCIPAL,
+        ExpectedTransaction::INIT_INTEREST,
+      ]).pluck(:date).uniq
     end
 
     def date_of_balance
-      loan_state.date_of_balance
-    end
-
-    def expected_transactions_sum
-      loan_state.expected_balance
+      self.initial_repayment_dates.sort.last
     end
 
     def current_date
@@ -100,8 +109,16 @@ module Lms
       loan_state.expected_balance
     end
 
+    def status
+      loan_state.status
+    end
+
     def zzz_bal
       loan_state.zzz_bal
+    end
+
+    def interest_fees_sum
+      expected_transactions.where(kind: [ExpectedTransaction::INTEREST_FEE]).pluck(:amount).sum
     end
   end
 end

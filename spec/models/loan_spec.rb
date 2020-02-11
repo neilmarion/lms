@@ -4,13 +4,15 @@ module Lms
   describe Loan do
     let(:start_date) { "2020-03-01" }
     let(:loan) do
-      Loan.create({
+      loan = Loan.create({
         amount: 100000,
         interest: 0.01,
         period_count: 2,
         start_date: start_date,
         period: "monthly",
       })
+
+      loan.reload
     end
 
     let(:expected_result) do
@@ -53,6 +55,7 @@ module Lms
             created_at: current_date,
             updated_at: current_date,
           })
+
           expect(loan.remaining_balance.round(2)).to eq 50751.24
           expect(loan.remaining_interest.round(2)).to eq 502.49
           expect(loan.remaining_principal.round(2)).to eq 50248.76
@@ -108,7 +111,7 @@ module Lms
           expect(loan.remaining_balance.round(2)).to eq 31310.0
           expect(loan.remaining_interest.round(2)).to eq 310.0
           expect(loan.remaining_principal.round(2)).to eq 31000.00
-          expect(loan.reload.status).to eq Loan::EARLY
+          expect(loan.status).to eq Loan::EARLY
 
           current_date = "2020-05-01"
           allow(Date).to receive(:today).and_return(current_date.to_date)
@@ -123,7 +126,7 @@ module Lms
           expect(loan.paid_balance).to eq 101310.0
           expect(loan.paid_interest).to eq 1310.0
           expect(loan.paid_principal).to eq 100000.00
-          expect(loan.reload.status).to eq Loan::ONTIME
+          expect(loan.status).to eq Loan::ONTIME
         end
       end
     end
@@ -145,9 +148,12 @@ module Lms
           current_date = "2020-04-01"
           allow(Date).to receive(:today).and_return(current_date.to_date)
           loan.do_balance
+
           current_date = "2020-04-02"
           allow(Date).to receive(:today).and_return(current_date.to_date)
           loan.do_balance
+
+          binding.pry
           expect(loan.remaining_balance.round(2)).to eq 101519.23
           expect(loan.remaining_interest.round(2)).to eq 1519.23
           expect(loan.remaining_principal.round(2)).to eq 100000
@@ -179,7 +185,7 @@ module Lms
           expect(loan.paid_balance.round(2)).to eq 50784.72
           expect(loan.paid_interest.round(2)).to eq 1066.67
           expect(loan.paid_principal.round(2)).to eq 49718.06
-          expect(loan.reload.status).to eq Loan::ONTIME
+          expect(loan.status).to eq Loan::ONTIME
 
           current_date = "2020-05-01"
           allow(Date).to receive(:today).and_return(current_date.to_date)
@@ -197,7 +203,7 @@ module Lms
           expect(loan.paid_balance.round(2)).to eq 101535.97
           expect(loan.paid_interest.round(2)).to eq 1535.96
           expect(loan.paid_principal.round(2)).to eq 100000.0
-          expect(loan.reload.status).to eq Loan::ONTIME
+          expect(loan.status).to eq Loan::ONTIME
         end
       end
     end

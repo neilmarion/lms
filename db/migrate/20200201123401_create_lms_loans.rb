@@ -5,7 +5,6 @@ class CreateLmsLoans < ActiveRecord::Migration[5.0]
       t.float :interest
       t.integer :period_count
       t.string :period
-      t.string :status, default: "ontime"
       t.date :date_today
       t.timestamp :start_date
 

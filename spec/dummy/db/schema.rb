@@ -41,11 +41,10 @@ ActiveRecord::Schema.define(version: 20200201123402) do
     t.float    "interest"
     t.integer  "period_count"
     t.string   "period"
-    t.string   "status",       default: "ontime"
     t.date     "date_today"
     t.datetime "start_date"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
 end
