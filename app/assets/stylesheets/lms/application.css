@@ -168,3 +168,7 @@ div {
 .period {
   background-color: #2ecc71;
 }
+
+.date {
+  text-align: right;
+}

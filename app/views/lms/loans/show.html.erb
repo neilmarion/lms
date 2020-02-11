@@ -138,21 +138,20 @@
 
 <table class="loan">
   <tr>
-    <th class="date" colspan="2">Date</th>
+    <th class="date">Date</th>
     <th colspan="3">Charges</th>
     <th colspan="3">Payments</th>
     <th>Notes</th>
   </tr>
   <tr>
-    <th></th><th></th>
+    <th></th>
     <th>int</th><th>pri</th><th>tot</th>
     <th>int</th><th>pri</th><th>tot</th>
     <th>Notes</th>
   </tr>
   <% @view.each do |date, period| %>
     <tr class="period">
-      <td><%= date %></td>
-      <td></td>
+      <td><%= date %> to <%= date.next_month %></td>
       <td></td>
       <td></td>
       <td></td>
@@ -164,8 +163,7 @@
 
     <% period[:txns].each do |txn| %>
       <tr>
-        <td></td>
-        <td><%= txn[:date] %></td>
+        <td class="date"><%= txn[:date] %></td>
         <td class="numbers"><%= txn[:ctot_ipd] %></td>
         <td class="numbers"><%= txn[:ctot_ppd] %></td>
         <td class="numbers"><%= txn[:ctot_bpd] %></td>
@@ -177,8 +175,7 @@
     <% end %>
 
     <tr>
-      <td></td>
-      <td></td>
+      <td>Due <%= date %></td>
       <td><%= period[:tot_ipd] %></td>
       <td><%= period[:tot_ppd] %></td>
       <td><%= period[:tot_bpd] %></td>
