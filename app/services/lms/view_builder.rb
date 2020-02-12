@@ -30,7 +30,33 @@ module Lms
           pri_chg = row[:pri_chg].abs.round(2)
           tot_chg = row[:tot_chg].abs.round(2)
 
-          if current_date <= date.to_date
+          if current_date == date.to_date
+            if status == "late"
+              hash[date] = {
+                date: date.to_s,
+                ctot_ipd: int_chg,
+                ctot_ppd: pri_chg,
+                ctot_bpd: tot_chg,
+                ptot_ipd: nil,
+                ptot_ppd: nil,
+                ptot_bpd: nil,
+                note: "pay immediately",
+                due: "late",
+              }
+            else
+              hash[date] = {
+                date: date.to_s,
+                ctot_ipd: nil,
+                ctot_ppd: nil,
+                ctot_bpd: nil,
+                ptot_ipd: int_chg,
+                ptot_ppd: pri_chg,
+                ptot_bpd: tot_chg,
+                note: "pay immediately",
+                due: "on time",
+              }
+            end
+          elsif current_date < date.to_date
             hash[date] = {
               date: date.to_s,
               ctot_ipd: int_chg,
@@ -40,7 +66,7 @@ module Lms
               ptot_ppd: nil,
               ptot_bpd: nil,
               note: status == "late" && date.to_date == current_date ? "pay immediately" : "payment due",
-              due: status == "late" && date.to_date == current_date ? "due-today" : "ontime",
+              due: status == "late" && date.to_date == current_date ? "late" : "ontime",
             }
           else
             hash[date] = {
@@ -60,20 +86,13 @@ module Lms
         hash
       end
 
-      aipd = actual_sequence[loan.date_of_balance.to_s][:tot_ipd].abs.round(2)
-      appd = actual_sequence[loan.date_of_balance.to_s][:tot_ppd].abs.round(2)
-      abpd = actual_sequence[loan.date_of_balance.to_s][:tot_bpd].abs.round(2)
-      bipd = balanced_sequence[loan.date_of_balance.to_s][:tot_ipd].abs.round(2)
-      bppd = balanced_sequence[loan.date_of_balance.to_s][:tot_ppd].abs.round(2)
-      bbpd = balanced_sequence[loan.date_of_balance.to_s][:tot_bpd].abs.round(2)
-
       { figures: figures, totals: {
-        bipd: bipd,
-        bppd: bppd,
-        bbpd: bbpd,
-        aipd: aipd,
-        appd: appd,
-        abpd: abpd
+        bipd: loan.remaining_interest.round(2),
+        bppd: loan.remaining_principal.round(2),
+        bbpd: loan.remaining_balance.round(2),
+        aipd: loan.paid_interest.round(2),
+        appd: loan.paid_principal.round(2),
+        abpd: loan.paid_balance.round(2),
       }}
     end
   end
