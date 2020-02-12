@@ -40,9 +40,9 @@ module Lms
               if a_tot_chg != 0
                 hash[date] = {
                   date: date.to_s,
-                  ctot_ipd: int_chg - a_int_chg,
-                  ctot_ppd: pri_chg - a_pri_chg,
-                  ctot_bpd: tot_chg - a_tot_chg,
+                  ctot_ipd: (int_chg - a_int_chg).abs.round(2),
+                  ctot_ppd: (pri_chg - a_pri_chg).abs.round(2),
+                  ctot_bpd: (tot_chg - a_tot_chg).abs.round(2),
                   ptot_ipd: a_int_chg,
                   ptot_ppd: a_pri_chg,
                   ptot_bpd: a_tot_chg,
