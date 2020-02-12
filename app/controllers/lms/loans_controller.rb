@@ -51,5 +51,25 @@ module Lms
       params[:loan][:actual_transactions_attributes]["0"][:note] =
         params[:loan][:actual_transactions_attributes]["0"][:kind]
     end
+
+    def goto_date
+      loan = Loan.find(params[:id])
+      new_date = params[:current_date][:date].to_date
+
+      if new_date > loan.date_today
+        loop do
+          loan.update_attributes(date_today: loan.date_today + 1.day)
+          loan.do_balance
+          break if loan.date_today == new_date
+        end
+      elsif new_date < loan.date_today
+        loan.actual_transactions.where("created_at >= ? AND created_at < ?", new_date, loan.date_today + 1.day).destroy_all
+        loan.expected_transactions.where("date > ? AND date < ?", new_date, loan.date_today + 1.day).where(kind: "interest_fee").destroy_all
+        loan.update_attributes(date_today: new_date)
+        loan.do_balance
+      end
+
+      redirect_to loan_path(params[:id])
+    end
   end
 end

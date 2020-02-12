@@ -229,4 +229,9 @@
     <% end %>
     <%= f.submit "Confirm" %>
   <% end %>
+
+  <%= form_for :current_date, url: goto_date_loan_path(@loan.id) do |form| %>
+    <%= form.date_field :date, "data-provide" => 'datepicker' %>
+    <%= form.submit "Go to date" %>
+  <% end  %>
 </div>
