@@ -15,7 +15,7 @@
     <th>zzz_pri</th>
     <th>zzz_bal</th>
   </tr>
-  <% @loan.loan_state.balanced_sequence.each do |date, hash| %>
+  <% @loan.loan_state.actual_sequence.each do |date, hash| %>
     <tr>
       <td><%= date %></td>
       <td><%= hash[:aaa_bal].round(2) %></td>

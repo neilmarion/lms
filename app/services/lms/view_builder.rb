@@ -33,17 +33,35 @@ module Lms
 
           if current_date == date.to_date
             if status == "late"
-              hash[date] = {
-                date: date.to_s,
-                ctot_ipd: int_chg,
-                ctot_ppd: pri_chg,
-                ctot_bpd: tot_chg,
-                ptot_ipd: nil,
-                ptot_ppd: nil,
-                ptot_bpd: nil,
-                note: "pay now",
-                due: "due-today",
-              }
+              a_tot_chg = actual_sequence[date.to_s][:tot_chg].abs.round(2)
+              a_pri_chg = actual_sequence[date.to_s][:pri_chg].abs.round(2)
+              a_int_chg = actual_sequence[date.to_s][:int_chg].abs.round(2)
+
+              if a_tot_chg != 0
+                hash[date] = {
+                  date: date.to_s,
+                  ctot_ipd: int_chg - a_int_chg,
+                  ctot_ppd: pri_chg - a_pri_chg,
+                  ctot_bpd: tot_chg - a_tot_chg,
+                  ptot_ipd: a_int_chg,
+                  ptot_ppd: a_pri_chg,
+                  ptot_bpd: a_tot_chg,
+                  note: "pay now",
+                  due: "due-today",
+                }
+              else
+                hash[date] = {
+                  date: date.to_s,
+                  ctot_ipd: int_chg,
+                  ctot_ppd: pri_chg,
+                  ctot_bpd: tot_chg,
+                  ptot_ipd: nil,
+                  ptot_ppd: nil,
+                  ptot_bpd: nil,
+                  note: "pay now",
+                  due: "due-today",
+                }
+              end
             else
               hash[date] = {
                 date: date.to_s,
