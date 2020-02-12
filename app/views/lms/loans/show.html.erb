@@ -203,6 +203,21 @@
 
 <br><br><br>
 
+<table class="loan">
+  <tr>
+    <th class="date">Date</th>
+    <th>Payments</th>
+  </tr>
+  <% @loan.actual_transactions.each do |at| %>
+    <tr>
+      <td class="date"><%= at.created_at.strftime("%Y-%m-%d %H %M") %></td>
+      <td><%= at.amount.abs.round(2) %></td>
+    </tr>
+  <% end %>
+</table>
+
+<br><br><br>
+
 <div class="controls">
   <%= form_for @loan do |f| %>
     <%= f.fields_for :actual_transactions, @loan.actual_transactions.new do |f| %>
