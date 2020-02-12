@@ -13,6 +13,8 @@ module Lms
     def execute
       case period
       when "daily"
+      when "every_three_days"
+        daily_interests_for_every_three_days
       when "weekly"
       when "monthly"
         daily_interests_for_monthly
@@ -40,6 +42,20 @@ module Lms
         end
 
         period_start_date = period_start_date.next_month
+        hash
+      end
+    end
+
+    def daily_interests_for_every_three_days
+      period_start_date = start_date
+      period_count.times.inject({}) do |hash, index|
+        range = period_start_date.to_date...(period_start_date + 3.days).to_date
+        daily_interest = interest / (range.count)
+        range.map{ |date| date.strftime(DATE_ID_FORMAT) }.map.with_index do |day, i|
+          hash[day] = daily_interest
+        end
+
+        period_start_date = period_start_date + 3.days
         hash
       end
     end

@@ -9,6 +9,8 @@ module Lms
     def execute
       case loan.period
       when "daily"
+      when "every_three_days"
+        initial_dates_for_every_three_days
       when "weekly"
       when "monthly"
         initial_dates_for_monthly
@@ -28,7 +30,12 @@ module Lms
     end
 
     def initial_dates_for_every_three_days
-
+      period_start_date = (loan.start_date-1.day).to_date + 3.days
+      loan.period_count.times.inject([]) do |arr, _|
+        arr << period_start_date
+        period_start_date = period_start_date + 3.days
+        arr
+      end
     end
   end
 end

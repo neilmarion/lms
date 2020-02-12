@@ -98,7 +98,6 @@ module Lms
         })
       end
 
-      # NOTE: balance was 101,502 but now it's only 101,210
       it "builds the loan state that will balance on the balance date" do
         service = described_class.new(loan, current_date)
         builder = service.execute
