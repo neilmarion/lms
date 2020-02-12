@@ -145,8 +145,8 @@
   </tr>
   <tr>
     <th></th>
-    <th>int</th><th>pri</th><th>tot</th>
-    <th>int</th><th>pri</th><th>tot</th>
+    <th>interest</th><th>principal</th><th>total</th>
+    <th>interest</th><th>principal</th><th>total</th>
     <th>Notes</th>
   </tr>
   <% @view[:figures].each do |date, txn| %>
@@ -182,6 +182,18 @@
     </td>
     <td>
       <%= @view[:totals][:abpd] %>
+    </td>
+    <td>
+    </td>
+  </tr>
+  <tr class="totals">
+    <td>
+    </td>
+    <td colspan="3">
+      Remaining
+    </td>
+    <td colspan="3">
+      Paid
     </td>
     <td>
     </td>

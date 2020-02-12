@@ -182,3 +182,12 @@ div {
   color: #fff;
   background-color: #e74c3c;
 }
+
+.next-due {
+  color: #fff;
+  background-color: #f1c40f;
+}
+
+.not-yet-due {
+  color: #7f8c8d;
+}

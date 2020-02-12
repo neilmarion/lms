@@ -23,6 +23,7 @@ module Lms
       actual_sequence = loan.loan_state.actual_sequence
       current_date = (loan.date_today || Date.today)
       status = loan.status
+      next_due = 0;
 
       figures = balanced_sequence.inject({}) do |hash, (date, row)|
         if row[:tot_chg] != 0
@@ -40,8 +41,8 @@ module Lms
                 ptot_ipd: nil,
                 ptot_ppd: nil,
                 ptot_bpd: nil,
-                note: "pay immediately",
-                due: "late",
+                note: "pay now",
+                due: "due-today",
               }
             else
               hash[date] = {
@@ -52,8 +53,8 @@ module Lms
                 ptot_ipd: int_chg,
                 ptot_ppd: pri_chg,
                 ptot_bpd: tot_chg,
-                note: "pay immediately",
-                due: "on time",
+                note: "payment",
+                due: "ontime",
               }
             end
           elsif current_date < date.to_date
@@ -65,9 +66,10 @@ module Lms
               ptot_ipd: nil,
               ptot_ppd: nil,
               ptot_bpd: nil,
-              note: status == "late" && date.to_date == current_date ? "pay immediately" : "payment due",
-              due: status == "late" && date.to_date == current_date ? "late" : "ontime",
+              note: "payment due",
+              due: next_due == 0 ? "next-due" : "not-yet-due",
             }
+            next_due = 1
           else
             hash[date] = {
               date: date.to_s,
