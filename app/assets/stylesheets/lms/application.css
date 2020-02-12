@@ -177,3 +177,8 @@ div {
   color: #fff;
   background-color: #34495e
 }
+
+.due-today {
+  color: #fff;
+  background-color: #e74c3c;
+}

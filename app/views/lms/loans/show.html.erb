@@ -149,40 +149,16 @@
     <th>int</th><th>pri</th><th>tot</th>
     <th>Notes</th>
   </tr>
-  <% @view[:figures].each do |date, period| %>
-    <tr class="period">
-      <td><%= date.last_month %> to <%= date %></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-
-    <% period[:txns].each do |txn| %>
-      <tr>
-        <td class="date"><%= txn[:date] %></td>
-        <td class="numbers"><%= txn[:ctot_ipd] %></td>
-        <td class="numbers"><%= txn[:ctot_ppd] %></td>
-        <td class="numbers"><%= txn[:ctot_bpd] %></td>
-        <td class="numbers"><%= txn[:ptot_ipd] %></td>
-        <td class="numbers"><%= txn[:ptot_ppd] %></td>
-        <td class="numbers"><%= txn[:ptot_bpd] %></td>
-        <td class="numbers"><%= txn[:note] %></td>
-      </tr>
-    <% end %>
-
-    <tr>
-      <td class="date">Due <%= date %></td>
-      <td><%= period[:tot_ipd] %></td>
-      <td><%= period[:tot_ppd] %></td>
-      <td><%= period[:tot_bpd] %></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+  <% @view[:figures].each do |date, txn| %>
+    <tr class="<%= txn[:due] %>">
+      <td class="date"><%= txn[:date] %></td>
+      <td class="numbers"><%= txn[:ctot_ipd] %></td>
+      <td class="numbers"><%= txn[:ctot_ppd] %></td>
+      <td class="numbers"><%= txn[:ctot_bpd] %></td>
+      <td class="numbers"><%= txn[:ptot_ipd] %></td>
+      <td class="numbers"><%= txn[:ptot_ppd] %></td>
+      <td class="numbers"><%= txn[:ptot_bpd] %></td>
+      <td class="numbers"><%= txn[:note] %></td>
     </tr>
   <% end%>
   <tr class="totals">
