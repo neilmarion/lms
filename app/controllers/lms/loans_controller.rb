@@ -64,7 +64,6 @@ module Lms
         end
       elsif new_date < loan.date_today
         loan.actual_transactions.where("created_at >= ? AND created_at < ?", new_date, loan.date_today + 1.day).destroy_all
-        loan.expected_transactions.where("date > ? AND date < ?", new_date, loan.date_today + 1.day).where(kind: "interest_fee").destroy_all
         loan.update_attributes(date_today: new_date)
         loan.do_balance
       end

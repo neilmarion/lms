@@ -10,7 +10,7 @@ module Lms
       ActualTransaction.set_callback(:create, :after, :do_balance)
     end
 
-    let(:start_date) { "2020-03-01" }
+    let(:start_date) { "2020-03-01".to_date }
     let(:balance_date) { "2020-05-01" }
     let(:loan) do
       Loan.create({
@@ -33,7 +33,7 @@ module Lms
     end
 
     context "when customer pays off everything on time" do
-      let(:current_date) { "2020-05-02" }
+      let(:current_date) { "2020-05-02".to_date }
       before(:each) do
         loan.actual_transactions.create({
           amount: -1*loan.expected_payment_per_period,
@@ -54,7 +54,7 @@ module Lms
     end
 
     context "when customer pays late but pays additional interest" do
-      let(:current_date) { "2020-04-13" }
+      let(:current_date) { "2020-04-13".to_date }
       before(:each) do
         loan.actual_transactions.create({
           amount: -1*loan.expected_payment_per_period,
@@ -84,7 +84,7 @@ module Lms
     end
 
     context "when customer pays early so lesser interest is paid" do
-      let(:current_date) { "2020-05-02" }
+      let(:current_date) { "2020-05-02".to_date }
       before(:each) do
         loan.actual_transactions.create({
           amount: -1*80000,

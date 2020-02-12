@@ -17,12 +17,6 @@ module Lms
       sequence_logic = balancing_logic.sequence_logic
       table = sequence_logic.execute
 
-      case result
-      when Loan::LATE
-        interest = loan.expected_transactions.pluck(:amount).sum + adjustments[:new_balance]
-        loan.expected_transactions.create(kind: ExpectedTransaction::INTEREST_FEE, date: current_date, amount: -1*interest, note: "Late payment - #{current_date}") if interest.round(2) != 0
-      end
-
       [table, result]
     end
   end

@@ -1,0 +1,34 @@
+module Lms
+  class RepaymentDates
+    attr_accessor :loan
+
+    def initialize(loan)
+      @loan = loan
+    end
+
+    def execute
+      case loan.period
+      when "daily"
+      when "weekly"
+      when "monthly"
+        initial_dates_for_monthly
+      when "quarterly"
+      when "biannualy"
+      when "annualy"
+      end
+    end
+
+    def initial_dates_for_monthly
+      period_start_date = loan.start_date.to_date.next_month
+      loan.period_count.times.inject([]) do |arr, _|
+        arr << period_start_date
+        period_start_date = period_start_date.next_month
+        arr
+      end
+    end
+
+    def initial_dates_for_every_three_days
+
+    end
+  end
+end

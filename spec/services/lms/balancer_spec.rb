@@ -2,14 +2,6 @@ require "rails_helper"
 
 module Lms
   describe Balancer do
-    before do
-      ActualTransaction.skip_callback(:create, :after, :do_balance)
-    end
-
-    after do
-      ActualTransaction.set_callback(:create, :after, :do_balance)
-    end
-
     let(:start_date) { "2020-03-01" }
     let(:balance_date) { "2020-05-01" }
     let(:loan) do
@@ -22,7 +14,8 @@ module Lms
       })
     end
 
-    context "when customer pays on time" do
+    context "when customer is on time" do
+      let(:current_date) { "2020-04-02" }
       before(:each) do
         loan.actual_transactions.create({
           amount: -1*loan.expected_payment_per_period,
@@ -30,60 +23,25 @@ module Lms
         })
       end
 
-      it "creates expected transactions accordingly in order to balance" do
-        expected_txns_count = loan.expected_transactions.count
-        expect {
-          balancer = described_class.new(loan, "2020-04-01".to_date)
-          balancer.execute
-          expected_txns_count = loan.expected_transactions.count
-        }.not_to change{ expected_txns_count }.from 4
+      specify do
+        balancer = described_class.new(loan, current_date.to_date)
+        table, result = balancer.execute
+        expect(result).to eq "ontime"
       end
     end
 
-    context "when customer pays late but pays additional interest" do
+    context "when customer is late" do
       let(:current_date) { "2020-04-02" }
-      it "creates expected transactions accordingly in order to balance" do
+
+      specify do
         allow(Date).to receive(:today).and_return(current_date.to_date)
-        expected_txns_count = loan.expected_transactions.count
-        expect {
-          balancer = described_class.new(loan, current_date.to_date)
-          balancer.execute
-          expected_txns_count = loan.expected_transactions.count
-        }.to change{ expected_txns_count }.from 4
-
-        # NOTE: No more expected transactions must be created after balancing
-        expect {
-          balancer = described_class.new(loan, current_date.to_date)
-          balancer.execute
-          expected_txns_count = loan.expected_transactions.count
-        }.not_to change{ expected_txns_count }.from 5
-
-        # NOTE: Remove below
-
-        expected_txns_count = loan.expected_transactions.count
-        expect {
-          balancer = described_class.new(loan, "2020-04-03".to_date)
-          balancer.execute
-          expected_txns_count = loan.expected_transactions.count
-        }.to change{ expected_txns_count }.from 5
-
-        expected_txns_count = loan.expected_transactions.count
-        expect {
-          balancer = described_class.new(loan, "2020-04-04".to_date)
-          balancer.execute
-          expected_txns_count = loan.expected_transactions.count
-        }.to change{ expected_txns_count }.from 6
-
-        expected_txns_count = loan.expected_transactions.count
-        expect {
-          balancer = described_class.new(loan, "2020-04-05".to_date)
-          balancer.execute
-          expected_txns_count = loan.expected_transactions.count
-        }.to change{ expected_txns_count }.from 7
+        balancer = described_class.new(loan, current_date.to_date)
+        table, result = balancer.execute
+        expect(result).to eq "late"
       end
     end
 
-    context "when customer pays early so lesser interest is paid" do
+    context "when customer pays early" do
       let(:current_date) { "2020-04-02" }
       before(:each) do
         loan.actual_transactions.create({
@@ -93,14 +51,11 @@ module Lms
         })
       end
 
-      it "creates expected transactions accordingly in order to balance" do
+      specify do
         allow(Date).to receive(:today).and_return(current_date.to_date)
-        expected_txns_count = loan.expected_transactions.count
-        expect {
-          balancer = described_class.new(loan, current_date.to_date)
-          balancer.execute
-          expected_txns_count = loan.expected_transactions.count
-        }.to_not change{ expected_txns_count }
+        balancer = described_class.new(loan, current_date.to_date)
+        table, result = balancer.execute
+        expect(result).to eq "early"
       end
     end
   end

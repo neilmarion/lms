@@ -3,13 +3,8 @@ module Lms
     has_many :actual_transactions
     accepts_nested_attributes_for :actual_transactions
 
-    has_many :expected_transactions
-    accepts_nested_attributes_for :expected_transactions
-
     has_many :payments
     accepts_nested_attributes_for :payments
-
-    after_create :create_initial_expected_transactions
 
     # Loan statuses
     EARLY = "early"
@@ -30,28 +25,11 @@ module Lms
     end
 
     def expected_payment_per_period
-      AmortizationCalculator.payment_per_period({
+      @eppp ||= AmortizationCalculator.payment_per_period({
         amount: amount,
         interest: interest,
         period_count: period_count,
       })
-    end
-
-    def create_initial_expected_transactions
-      initial_repayment_schedule = InitialExpectedTransactionsScheduleMapper.new(self).execute
-      initial_repayment_schedule.map do |date, value|
-        expected_transactions.create({
-          date: date,
-          amount: value[:interest],
-          kind: ExpectedTransaction::INIT_INTEREST,
-        })
-
-        expected_transactions.create({
-          date: date,
-          amount: value[:principal],
-          kind: ExpectedTransaction::INIT_PRINCIPAL,
-        })
-      end
     end
 
     def date_of_balance
@@ -63,14 +41,11 @@ module Lms
     end
 
     def initial_repayment_dates
-      self.expected_transactions.where(kind: [
-        ExpectedTransaction::INIT_PRINCIPAL,
-        ExpectedTransaction::INIT_INTEREST,
-      ]).pluck(:date).uniq
+      RepaymentDates.new(self).execute
     end
 
     def date_of_balance
-      self.initial_repayment_dates.sort.last
+      initial_repayment_dates.sort.last
     end
 
     def current_date
@@ -111,10 +86,6 @@ module Lms
 
     def status
       loan_state.status
-    end
-
-    def interest_fees_sum
-      expected_transactions.where(kind: [ExpectedTransaction::INTEREST_FEE]).pluck(:amount).sum
     end
   end
 end
