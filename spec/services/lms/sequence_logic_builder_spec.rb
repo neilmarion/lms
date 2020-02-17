@@ -2,14 +2,6 @@ require "rails_helper"
 
 module Lms
   describe SequenceLogicBuilder do
-    before do
-      ActualTransaction.skip_callback(:create, :after, :do_balance)
-    end
-
-    after do
-      ActualTransaction.set_callback(:create, :after, :do_balance)
-    end
-
     let(:start_date) { "2020-03-01".to_date }
     let(:balance_date) { "2020-05-01" }
     let(:loan) do

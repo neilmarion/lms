@@ -6,18 +6,12 @@ module Lms
     has_many :payments
     accepts_nested_attributes_for :payments
 
-    # Loan statuses
     EARLY = "early"
     LATE = "late"
     ONTIME = "ontime"
 
     def loan_state
-      @loan_state || LoanState.new(self)
-    end
-
-    def do_balance
-      balancer = Balancer.new(self, self.date_today || Date.today)
-      balancer.execute
+      LoanState.new(self)
     end
 
     def initial_balance

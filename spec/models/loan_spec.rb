@@ -135,11 +135,9 @@ module Lms
           # Customer does not pay on 2020-04-01
           current_date = "2020-04-01"
           allow(Date).to receive(:today).and_return(current_date.to_date)
-          loan.do_balance
 
           current_date = "2020-04-02"
           allow(Date).to receive(:today).and_return(current_date.to_date)
-          loan.do_balance
 
           expect(loan.remaining_balance.round(2)).to eq 101519.23
           expect(loan.remaining_interest.round(2)).to eq 1519.23
@@ -151,7 +149,6 @@ module Lms
 
           current_date = "2020-04-03"
           allow(Date).to receive(:today).and_return(current_date.to_date)
-          loan.do_balance
           expect(loan.remaining_balance.round(2)).to eq 101535.96
           expect(loan.remaining_interest.round(2)).to eq 1535.96
           expect(loan.remaining_principal.round(2)).to eq 100000
