@@ -75,7 +75,7 @@
       Start Date
     </td>
     <td>
-      <%= @loan.start_date.strftime("%Y-%m-%d") %>
+      <%= @loan.start_date.strftime(Lms::DailyInterestMapper::DATE_ID_FORMAT) %>
     </td>
   </tr>
   <tr>

@@ -25,7 +25,7 @@ module Lms
     def actual_transactions
       txns = loan.actual_transactions.where("created_at <= ?", DateTime.strptime(current_date.to_s, "%Y-%m-%d"))
       txns.map do |txn|
-        { date: txn.created_at.strftime("%Y-%m-%d"), amount: txn.amount }
+        { date: txn.created_at.strftime(Lms::DailyInterestMapper::DATE_ID_FORMAT), amount: txn.amount }
       end
     end
 
