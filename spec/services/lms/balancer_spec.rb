@@ -18,7 +18,7 @@ module Lms
       let(:current_date) { "2020-04-02" }
       before(:each) do
         loan.actual_transactions.create({
-          amount: -1*loan.expected_payment_per_period,
+          amount: -loan.expected_payment_per_period,
           created_at: "2020-04-01"
         })
       end
@@ -45,7 +45,7 @@ module Lms
       let(:current_date) { "2020-04-02" }
       before(:each) do
         loan.actual_transactions.create({
-          amount: -1*80000,
+          amount: -80000,
           created_at: "2020-04-01",
           updated_at: "2020-04-01",
         })

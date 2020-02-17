@@ -39,7 +39,7 @@ module Lms
           current_date = "2020-04-01"
           allow(Date).to receive(:today).and_return(current_date.to_date)
           actual_transaction = loan.actual_transactions.create({
-            amount: -1*loan.expected_payment_per_period,
+            amount: -loan.expected_payment_per_period,
             created_at: current_date,
             updated_at: current_date,
           })
@@ -56,7 +56,7 @@ module Lms
           current_date = "2020-05-01"
           allow(Date).to receive(:today).and_return(current_date.to_date)
           actual_transaction = loan.actual_transactions.create({
-            amount: -1*loan.expected_payment_per_period,
+            amount: -loan.expected_payment_per_period,
             created_at: current_date,
             updated_at: current_date,
           })
@@ -88,7 +88,7 @@ module Lms
           current_date = "2020-04-01"
           allow(Date).to receive(:today).and_return(current_date.to_date)
           actual_transaction = loan.actual_transactions.create({
-            amount: -1*70000,
+            amount: -70000,
             created_at: current_date,
             updated_at: current_date,
           })
@@ -104,7 +104,7 @@ module Lms
           current_date = "2020-05-01"
           allow(Date).to receive(:today).and_return(current_date.to_date)
           actual_transaction = loan.actual_transactions.create({
-            amount: -1*31310.0,
+            amount: -31310.0,
             created_at: current_date,
             updated_at: current_date,
           })
@@ -162,7 +162,7 @@ module Lms
 
           # 33.4 is pre-computed
           actual_transaction = loan.actual_transactions.create({
-            amount: -1*(loan.expected_payment_per_period + 33.48),
+            amount: -(loan.expected_payment_per_period + 33.48),
             created_at: current_date,
             updated_at: current_date,
           })

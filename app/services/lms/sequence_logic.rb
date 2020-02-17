@@ -84,8 +84,8 @@ module Lms
       # the customer has paid some amount
       if tot_chg < 0
         # Pay off interest before principal
-        if (tot_chg)*-1 >= tot_int
-          int_chg = tot_int*-1
+        if (-tot_chg) >= tot_int
+          int_chg = -tot_int
           pri_chg = tot_chg - int_chg
         else
           int_chg = tot_chg

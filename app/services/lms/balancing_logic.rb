@@ -39,12 +39,12 @@ module Lms
 
         table.each do |date, row|
           if (base_payment_dates.include? date) && (row[:zzz_bal].round(2) < 0)
-            adjustment_transactions << { date: date, amount: row[:zzz_bal]*-1 }
+            adjustment_transactions << { date: date, amount: -row[:zzz_bal] }
             sequence_logic.add_transaction(adjustment_transactions.last)
             break
           elsif (base_payment_dates.include? date) && (row[:zzz_bal].round(0) == 0)
             # NOTE: Monkey patch because there is a possibility that table[date_of_balance][:zzz_bal].round(2) is 0.01
-            adjustment_transactions << { date: date, amount: row[:zzz_bal]*-1 }
+            adjustment_transactions << { date: date, amount: -row[:zzz_bal] }
             sequence_logic.add_transaction(adjustment_transactions.last)
           end
         end
@@ -58,7 +58,7 @@ module Lms
         table = sequence_logic.execute
         return calculate_adjustment if table[date_of_balance][:zzz_bal].round(2) == 0
 
-        adjustment_transactions << { date: transaction_date, amount: -1*table[date_of_balance][:zzz_bal] }
+        adjustment_transactions << { date: transaction_date, amount: -table[date_of_balance][:zzz_bal] }
         sequence_logic.add_transaction(adjustment_transactions.last)
         adjustment_transactions
       end
