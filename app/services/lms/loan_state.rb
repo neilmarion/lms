@@ -51,6 +51,11 @@ module Lms
       balanced_sequence
     end
 
+    def demo_sequence
+      sequence_logic = SequenceLogicBuilder.new(loan, current_date, "balancing").execute
+      sequence_logic.execute
+    end
+
     private
 
     def build_sequences

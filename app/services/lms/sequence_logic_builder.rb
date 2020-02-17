@@ -15,6 +15,17 @@ module Lms
 
       if purpose == "balancing"
         return Lms::SequenceLogic.new(loan.amount, daily_interest_map, txns)
+      elsif purpose == "demo"
+        expected_txns = loan.initial_repayment_dates.inject([]) do |arr, date|
+          arr << { date: date.to_s, amount: -loan.expected_payment_per_period } if date > current_date
+          arr
+        end
+
+        actual_txns = loan.actual_transactions.map do |txn|
+          { date: txn.created_at.strftime("%Y-%m-%d"), amount: txn.amount }
+        end
+
+        return Lms::SequenceLogic.new(loan.amount, daily_interest_map, actual_txns + expected_txns)
       else
         return Lms::SequenceLogic.new(loan.amount, daily_interest_map, actual_txns)
       end
