@@ -37,7 +37,7 @@ module Lms
     end
 
     def daily_interest_map
-      mapper = DailyInterestMapper.new(loan.start_date, loan.interest, loan.period, loan.period_count)
+      mapper = DailyInterestMapper.new(loan.start_date, loan.interest, loan.period, loan.period_count, loan.last_transaction_date)
       mapper.execute
     end
   end

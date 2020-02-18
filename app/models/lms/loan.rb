@@ -81,5 +81,9 @@ module Lms
     def status
       loan_state.status
     end
+
+    def last_transaction_date
+      [initial_repayment_dates.last.to_s, actual_transactions.last&.created_at&.to_date.to_s].max
+    end
   end
 end

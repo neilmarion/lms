@@ -3,11 +3,12 @@ module Lms
     DATE_ID_FORMAT = "%Y-%m-%d"
     attr_accessor :start_date, :interest, :period, :period_count
 
-    def initialize(start_date, interest, period, period_count)
+    def initialize(start_date, interest, period, period_count, last_transaction_date)
       @start_date = start_date
       @interest = interest
       @period = period
       @period_count = period_count
+      @last_transaction_date = last_transaction_date
     end
 
     def execute
@@ -58,6 +59,10 @@ module Lms
         period_start_date = period_start_date + 3.days
         hash
       end
+    end
+
+    def get_last_transaction_day
+
     end
   end
 end

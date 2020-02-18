@@ -72,7 +72,7 @@ module Lms
 
     it "gives daily interest rate for a monthly period loan" do
       start_date = DateTime.strptime("2020-03-01", "%Y-%m-%d")
-      result = described_class.new(start_date, 0.01, "monthly", 2).execute
+      result = described_class.new(start_date, 0.01, "monthly", 2, nil).execute
       expect(expected_result).to eq result
     end
   end
