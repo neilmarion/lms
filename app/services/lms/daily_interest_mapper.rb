@@ -1,7 +1,7 @@
 module Lms
   class DailyInterestMapper
     DATE_ID_FORMAT = "%Y-%m-%d"
-    attr_accessor :start_date, :interest, :period, :period_count
+    attr_accessor :start_date, :interest, :period, :period_count, :last_transaction_date
 
     def initialize(start_date, interest, period, period_count, last_transaction_date)
       @start_date = start_date
@@ -29,7 +29,9 @@ module Lms
 
     def daily_interests_for_monthly
       period_start_date = start_date + 1.day
-      period_count.times.inject({}) do |hash, index|
+      count = period_count_to_cover
+
+      count.times.inject({}) do |hash, index|
         range = if index == 0
           (period_start_date.to_date-1.day)..period_start_date.next_month.to_date
         else
@@ -61,7 +63,20 @@ module Lms
       end
     end
 
-    def get_last_transaction_day
+    def period_count_to_cover
+      case period
+      when "daily"
+      when "every_three_days"
+        end_date = last_transaction_date.to_s > (start_date + (period_count*3).days).to_s ? last_transaction_date : (start_date + (period_count*3).days)
+        ((start_date - end_date) / 3) + 1
+      when "weekly"
+      when "monthly"
+        end_date = last_transaction_date.to_s > (start_date + period_count.months).to_s ? last_transaction_date : (start_date + period_count.months)
+        Time.at(end_date - start_date).month + 1
+      when "quarterly"
+      when "biannualy"
+      when "annualy"
+      end
 
     end
   end
