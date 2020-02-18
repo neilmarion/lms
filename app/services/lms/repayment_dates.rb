@@ -7,6 +7,8 @@ module Lms
     end
 
     def execute
+      return loan.repayment_dates.map(&:to_date) unless loan.repayment_dates.blank?
+
       case loan.period
       when "daily"
       when "every_three_days"

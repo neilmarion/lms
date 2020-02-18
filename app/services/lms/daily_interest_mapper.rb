@@ -51,7 +51,9 @@ module Lms
 
     def daily_interests_for_every_three_days
       period_start_date = start_date
-      period_count.times.inject({}) do |hash, index|
+      count = period_count_to_cover
+
+      count.times.inject({}) do |hash, index|
         range = period_start_date.to_date...(period_start_date + 3.days).to_date
         daily_interest = interest / (range.count)
         range.map{ |date| date.strftime(DATE_ID_FORMAT) }.map.with_index do |day, i|
@@ -67,12 +69,12 @@ module Lms
       case period
       when "daily"
       when "every_three_days"
-        end_date = last_transaction_date.to_s > (start_date + (period_count*3).days).to_s ? last_transaction_date : (start_date + (period_count*3).days)
-        ((start_date - end_date) / 3) + 1
+        end_date = last_transaction_date.to_s > (start_date + (period_count*3).days).to_s ? last_transaction_date.to_date : (start_date + (period_count*3).days)
+        ((end_date.to_date - start_date.to_date) / 3).to_i + 1
       when "weekly"
       when "monthly"
-        end_date = last_transaction_date.to_s > (start_date + period_count.months).to_s ? last_transaction_date : (start_date + period_count.months)
-        Time.at(end_date - start_date).month + 1
+        end_date = last_transaction_date.to_s > (start_date + period_count.months).to_s ? last_transaction_date.to_date : (start_date + period_count.months)
+        Time.at(end_date.to_date - start_date.to_date).month + 1
       when "quarterly"
       when "biannualy"
       when "annualy"
