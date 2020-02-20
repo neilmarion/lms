@@ -55,14 +55,11 @@ module Lms
       loan = Loan.find(params[:id])
       new_date = params[:current_date][:date].to_date
 
-      if new_date > loan.date_today
-        loop do
-          loan.update_attributes(date_today: loan.date_today + 1.day)
-          break if loan.date_today == new_date
-        end
-      elsif new_date < loan.date_today
+
+      loan.update_attributes(date_today: new_date)
+
+      if new_date < loan.date_today
         loan.actual_transactions.where("created_at >= ? AND created_at < ?", new_date, loan.date_today + 1.day).destroy_all
-        loan.update_attributes(date_today: new_date)
       end
 
       redirect_to loan_path(params[:id])

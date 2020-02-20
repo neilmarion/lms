@@ -69,12 +69,12 @@ module Lms
       case period
       when "daily"
       when "every_three_days"
-        end_date = last_transaction_date.to_s > (start_date + (period_count*3).days).to_s ? last_transaction_date.to_date : (start_date + (period_count*3).days)
+        end_date = last_transaction_date.to_s > (start_date.to_date + (period_count*3).days).to_s ? last_transaction_date.to_date : (start_date.to_date + (period_count*3).days)
         ((end_date.to_date - start_date.to_date) / 3).to_i + 1
       when "weekly"
       when "monthly"
-        end_date = last_transaction_date.to_s > (start_date + period_count.months).to_s ? last_transaction_date.to_date : (start_date + period_count.months)
-        Time.at(end_date.to_date - start_date.to_date).month + 1
+        end_date = last_transaction_date.to_s > (start_date.to_date + period_count.months).to_s ? last_transaction_date.to_date : (start_date.to_date + period_count.months)
+        ((end_date.to_date - start_date.to_date).to_i / 30) + 1
       when "quarterly"
       when "biannualy"
       when "annualy"
