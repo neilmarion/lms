@@ -66,6 +66,7 @@ module Lms
     end
 
     def period_count_to_cover
+      # NOTE: Always add another month
       case period
       when "daily"
       when "every_three_days"
