@@ -10,6 +10,19 @@ module Lms
     LATE = "late"
     ONTIME = "ontime"
 
+    after_create :initialize_repayment_schedule
+
+    def initialize_repayment_schedule
+      payment = expected_payment_per_period
+
+      initial_repayment_schedule = initial_repayment_dates.inject({}) do |hash, date|
+        hash[date.to_s] = payment
+        hash
+      end
+
+      update_attributes(repayment_schedule: initial_repayment_schedule)
+    end
+
     def loan_state
       LoanState.new(self)
     end
@@ -27,7 +40,7 @@ module Lms
     end
 
     def date_of_balance
-      initial_repayment_dates.sort.last
+      initial_repayment_dates.keys.sort.last
     end
 
     def initial_balance

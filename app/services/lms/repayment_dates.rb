@@ -7,7 +7,7 @@ module Lms
     end
 
     def execute
-      return loan.repayment_dates.map(&:to_date) unless loan.repayment_dates.blank?
+      return loan.repayment_schedule.keys.map(&:to_date) unless loan.repayment_schedule.blank?
 
       case loan.period
       when "daily"
